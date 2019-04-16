@@ -20,13 +20,21 @@
 
                 selectedEmployee = $(this).find("option:selected").val();
 
+                alert(selectedEmployee);
+
             });
+
+
 
             $('#inputGroupSelect02').on('change', function () {
 
                 selectedProject = $(this).find("option:selected").val();
 
+                alert(selectedProject);
+
             });
+
+
 
             $("#myform").on("submit", function () {
 
@@ -82,12 +90,12 @@
 
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
                 <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Logout</a>
-                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Login</a>
+                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
 
             </div>
         </div>
@@ -103,17 +111,29 @@
         </div>
 
         <div class="card-body">
-            <form method="post" th:action="@{/timecards/save}" th:object="${timecard}" id="myform">
+                <form method="post" th:action="@{/timecards/save}" th:object="${timecard}" id="myform">
+
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:if="${#fields.hasGlobalErrors()}"
+                       th:each="error : ${#fields.errors('global')}"
+                       th:text="${error}" >Validation error</p>
+
                 <div class="form-group">
                     <label for="date">Date</label>
                     <input th:field="*{date}" type="text" class="form-control" id="date"
                            placeholder="Enter Date"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('date')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div class="form-group">
                     <label for="hours">Hours</label>
                     <input th:field="*{hours}" type="text" class="form-control" id="hours"
                            placeholder="Hours"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('hours')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div class="form-group">
@@ -121,10 +141,12 @@
                     <select class="custom-select" id="inputGroupSelect01">
                         <option selected="">Choose...</option>
                         <div th:each="employee : ${employees}">
-                            <option th:value="${employee.id}" th:text="${employee.firstName}"></option>
-
+                            <option th:value="${employee.id}" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
                         </div>
                     </select>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('employee_id')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <input id="employee_id" name="employee_id" type="hidden" th:value="${timecard.employee_id}"/>
@@ -138,6 +160,9 @@
                             <option th:value="${project.id}" th:text="${project.name}"></option>
                         </div>
                     </select>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('project_id')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <input id="project_id" name="project_id" type="hidden" th:value="${timecard.project_id}"/>
@@ -146,6 +171,9 @@
                     <label for="comment">Comment</label>
                     <input th:field="*{comment}" type="text" class="form-control" id="comment"
                            placeholder="Comment"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('comment')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div th:if="${timecard.id != null}">

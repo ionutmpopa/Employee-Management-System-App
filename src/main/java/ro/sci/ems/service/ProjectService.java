@@ -67,27 +67,27 @@ public class ProjectService {
         projectDAO.update(project);
     }
 
-    public long getCostPerProject(long projectId) {
+    public double getCostPerProject(long projectId) {
 
         Collection<Timecard> timecards = timecardService.listAll();
         Collection<Employee> employees = employeeService.listAll();
         Collection<Cost> costs = costService.listAll();
 
-        long sum = 0;
-        long result = 0;
+        double sum = 0;
+        double result = 0;
 
         for(Timecard timecard: timecards) {
 
             if(timecard.getProject_id() == projectId) {
 
-                long hours = (long)timecard.getHours();
+                double hours = timecard.getHours();
                 long employeeId = timecard.getEmployee_id();
                 Employee employee = employeeService.get(employeeId);
 
                 for(Cost cost: costs) {
 
                     if (employee.getJobTitle() == cost.getTitle().toString()) {
-                        result = (long)cost.getCost() * hours;
+                        result = cost.getCost() * hours;
                     }
                 }
                 sum += result;

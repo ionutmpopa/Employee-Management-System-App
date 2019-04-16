@@ -1,21 +1,27 @@
 package ro.sci.ems.domain;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
 public class Timecard extends AbstractModel {
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @NotNull(message = "Cannot be emply!")
     private Date date;
 
     private String comment;
 
+    @Range(min = 1, message = "Minimum 1 hour is expected!")
     private double hours;
 
+    @Range(min = 1, message = "Must be a valid entry!")
     private long employee_id;
 
+    @Range(min = 1, message = "Must be a valid entry!")
     private long project_id;
 
     public Date getDate() {

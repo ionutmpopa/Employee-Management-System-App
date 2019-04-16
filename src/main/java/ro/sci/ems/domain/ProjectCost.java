@@ -3,7 +3,7 @@ package ro.sci.ems.domain;
 public class ProjectCost {
 
     private String name;
-    private long cost;
+    private double cost;
 
     public String getName() {
         return name;
@@ -13,11 +13,11 @@ public class ProjectCost {
         this.name = name;
     }
 
-    public long getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(long cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 }

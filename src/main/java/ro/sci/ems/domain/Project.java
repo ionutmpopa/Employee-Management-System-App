@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Project extends AbstractModel{
 
-    @NotEmpty
+    @NotEmpty(message = "Project name cannot be empty!")
     private String name;
 
     private String description;

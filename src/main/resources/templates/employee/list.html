@@ -25,12 +25,12 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link" href="/">Home</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Logout</a>
-                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Login</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@
     <hr/>
 
     <!--Button add employee-->
-    <a th:href="@{/employee/add}" class="btn btn-primary bt-sm mb-3">
+    <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/employee/add}" class="btn btn-primary bt-sm mb-3">
         Add Employee
     </a>
 
@@ -52,6 +52,7 @@
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>E-mail</th>
             <th>Birth Date</th>
             <th>Gender</th>
             <th>Employment Date</th>
@@ -60,10 +61,11 @@
         </tr>
         </thead>
 
-        <tbody>
+        <tbody sec:authorize="hasAuthority('ADMIN')">
         <tr th:each="tempEmployee: ${employees}">
             <td th:text="${tempEmployee.firstName}"></td>
             <td th:text="${tempEmployee.lastName}"></td>
+            <td th:text="${tempEmployee.email}"></td>
             <td th:text="${#dates.format(tempEmployee.birthDate, 'dd-MMM-yyyy')}"></td>
             <td th:text="${tempEmployee.gender}"></td>
             <td th:text="${#dates.format(tempEmployee.employmentDate, 'dd-MMM-yyyy')}"></td>

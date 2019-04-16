@@ -25,68 +25,85 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link" href="/">Home</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Logout</a>
-                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Login</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="container mt-5">
+<div sec:authorize="hasAuthority('ADMIN')" class="container mt-5">
     <div class="card text-white bg-dark mb-3">
         <div class="card-header">
             Add / Edit Employee
         </div>
         <div class="card-body">
 
-            <!--[#if errors??]-->
-            <!--[#list errors as error]-->
-            <!--<span style="color:red"> ${error}</span>-->
-            <!--<br>-->
-            <!--[/#list]-->
-            <!--[/#if]-->
-
-            <div th:if="${errors != null}">
-                <div th:each="error: ${errors}" class="alert alert-danger text-center" role="alert">
-                <span th:text="${error}"></span>
-                </div>
-            </div>
-
             <form method="post" th:action="@{/employee/save}" th:object="${employee}">
 
+                <p class="alert alert-danger text-center" role="alert"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Validation error</p>
 
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <input th:field="*{firstName}" type="text" class="form-control" id="firstName"
                            placeholder="Enter First Name"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('firstName')}"
+                       th:text="${error}">Validation error</p>
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
                     <input th:field="*{lastName}" type="text" class="form-control" id="lastName"
                            placeholder="Last Name"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('lastName')}"
+                       th:text="${error}">Validation error</p>
                 </div>
                 <div class="form-group">
                     <label for="birthDate">Birthdate</label>
                     <input th:field="*{birthDate}" type="text" class="form-control" id="birthDate"
                            placeholder="Birthdate"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('birthDate')}"
+                       th:text="${error}">Validation error</p>
                 </div>
                 <div class="form-group">
                     <label for="jobTitle">Job Title</label>
                     <input th:field="*{jobTitle}" type="text" class="form-control" id="jobTitle"
                            placeholder="Job Title"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('jobTitle')}"
+                       th:text="${error}">Validation error</p>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input th:field="*{email}" type="text" class="form-control" id="email"
+                           placeholder="E-mail"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('email')}"
+                       th:text="${error}">Validation error</p>
                 </div>
                 <div class="form-group">
                     <label for="gender">Gender</label>
                     <input th:field="*{gender}" type="text" class="form-control" id="gender" placeholder="Gender"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('gender')}"
+                       th:text="${error}">Validation error</p>
                 </div>
                 <div class="form-group">
                     <label for="employmentDate">Employment Date</label>
                     <input th:field="*{employmentDate}" type="text" class="form-control" id="employmentDate"
                            placeholder="Employment Date"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('employmentDate')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div th:if="${employee.id != null}">

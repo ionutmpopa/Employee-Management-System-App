@@ -1,5 +1,6 @@
 package ro.sci.ems.domain;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.NumberFormat;
 
 import java.util.Objects;
@@ -9,6 +10,7 @@ public class Cost extends AbstractModel {
     private Title title;
 
     @NumberFormat(pattern = "#,###.###")
+    @Range(min = 1, message = "Must be a valid entry!")
     private double cost;
 
     public Title getTitle() {

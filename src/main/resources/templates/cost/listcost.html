@@ -24,12 +24,12 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="#">Home</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
                 <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Logout</a>
-                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Login</a>
+                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
     <hr/>
 
     <!--Button add projects-->
-    <a th:href="@{/cost/add}" class="btn btn-primary bt-sm mb-3">
+    <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/cost/add}" class="btn btn-primary bt-sm mb-3">
         Add Cost
     </a>
 
@@ -53,7 +53,7 @@
         </tr>
         </thead>
 
-        <tbody>
+        <tbody sec:authorize="hasAuthority('ADMIN')">
         <tr th:each="tempCost: ${costs}">
             <td th:text="${tempCost.title}"></td>
             <td th:text="${tempCost.cost}"></td>

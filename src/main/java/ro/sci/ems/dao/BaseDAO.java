@@ -1,8 +1,8 @@
 package ro.sci.ems.dao;
 
-import java.util.Collection;
-
 import ro.sci.ems.domain.AbstractModel;
+
+import java.util.Collection;
 
 public interface BaseDAO<T extends AbstractModel> {
 

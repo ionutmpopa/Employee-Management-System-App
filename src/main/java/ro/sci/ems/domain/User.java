@@ -1,15 +1,19 @@
 package ro.sci.ems.domain;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class User extends AbstractModel {
 
+    @NotEmpty(message = "E-mail cannot be empty!")
 	private String email;
 
-
+    @NotEmpty(message = "Password cannot be empty!")
 	private String password;
 
+    @NotEmpty(message = "First name cannot be empty!")
 	private String firstName;
 
-
+    @NotEmpty(message = "Last name cannot be empty!")
 	private String lastName;
 
 	private boolean enabled;

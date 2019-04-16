@@ -17,57 +17,75 @@ import javax.validation.Valid;
 import java.util.LinkedList;
 import java.util.List;
 
-    @Controller
-    @RequestMapping("/register")
-    public class UserController {
+@Controller
+@RequestMapping("/register")
+public class UserController {
 
-        private static Logger LOGGER = LoggerFactory.getLogger("UserController");
+    private static Logger LOGGER = LoggerFactory.getLogger("UserController");
 
-        @Autowired
-        private UserService userService;
+    @Autowired
+    private UserService userService;
 
-        @RequestMapping("")
-        public ModelAndView add() {
-            ModelAndView modelAndView = new ModelAndView("register");
-            modelAndView.addObject("user", new User());
-            return modelAndView;
+    @RequestMapping("")
+    public ModelAndView add() {
+        ModelAndView modelAndView = new ModelAndView("register/add");
+        modelAndView.addObject("user", new User());
+        return modelAndView;
+    }
+
+
+    @RequestMapping("/save")
+    public ModelAndView save(@Valid User user,
+                             BindingResult bindingResult) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        User existing = userService.findByEmail(user.getEmail());
+
+        if (existing != null){
+            bindingResult.rejectValue("email", null, "There is already an account registered with that email");
         }
 
+        if (bindingResult.hasErrors()){
+            List<String> errors = new LinkedList<>();
 
-        @RequestMapping("/save")
-        public ModelAndView save(@Valid User user,
-                                 BindingResult bindingResult) {
+            for (FieldError error :
+                    bindingResult.getFieldErrors()) {
+                errors.add(error.getField() + ":" + error.getCode());
+            }
+            modelAndView.addObject("errors", errors);
+            RedirectView redirectView = new RedirectView("/register?error");
+            modelAndView.setView(redirectView);
+        }
 
-            ModelAndView modelAndView = new ModelAndView();
-            if (!bindingResult.hasErrors()) {
-                try {
-                    userService.save(user);
-                    RedirectView redirectView = new RedirectView("/register");
-                    modelAndView.setView(redirectView);
-                } catch (ValidationException ex) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                userService.save(user);
+                RedirectView redirectView = new RedirectView("/login?success");
+                modelAndView.setView(redirectView);
+            } catch (ValidationException ex) {
 
-                    LOGGER.error("validation error", ex);
+                LOGGER.error("validation error", ex);
 
-                    List<String> errors = new LinkedList<>();
-                    errors.add(ex.getMessage());
-                    modelAndView = new ModelAndView("");
-                    modelAndView.addObject("errors", errors);
-                    modelAndView.addObject("user", user);
-                }
-
-            } else {
                 List<String> errors = new LinkedList<>();
-
-                for (FieldError error :
-                        bindingResult.getFieldErrors()) {
-                    errors.add(error.getField() + ":" + error.getCode());
-                }
-
-                modelAndView = new ModelAndView("");
+                errors.add(ex.getMessage());
+                modelAndView = new ModelAndView("register/add");
                 modelAndView.addObject("errors", errors);
                 modelAndView.addObject("user", user);
             }
 
-            return modelAndView;
+        } else {
+            List<String> errors = new LinkedList<>();
+
+            for (FieldError error :
+                    bindingResult.getFieldErrors()) {
+                errors.add(error.getField() + ":" + error.getCode());
+            }
+
+            modelAndView = new ModelAndView("register/add");
+            modelAndView.addObject("errors", errors);
+            modelAndView.addObject("user", user);
         }
+
+        return modelAndView;
+    }
 }

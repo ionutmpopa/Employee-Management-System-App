@@ -7,4 +7,6 @@ import java.util.Collection;
 public interface UserDAO extends BaseDAO<User>{
 
     Collection<User> searchByName(String query);
+
+    User findByEmail(String email);
 }

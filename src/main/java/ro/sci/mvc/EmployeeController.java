@@ -65,11 +65,6 @@ public class EmployeeController {
         return  "redirect:/employee";
     }
 
-    @RequestMapping(value= "/cancel", method = RequestMethod.GET)
-    public String cancel() {
-        return  "redirect:/employee";
-    }
-
     @RequestMapping("/save")
     public ModelAndView save(@Valid Employee employee,
                              BindingResult bindingResult) {

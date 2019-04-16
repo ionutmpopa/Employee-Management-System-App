@@ -16,9 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by sebi on 4/19/17.
- */
+
 @Component
 public class CommonModelInterceptor implements HandlerInterceptor {
 

@@ -25,33 +25,45 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
                 <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Logout</a>
-                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Login</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="container mt-5">
+<div sec:authorize="hasAuthority('ADMIN')" class="container mt-5">
     <div class="card text-white bg-dark mb-3">
         <div class="card-header">
             Add / Edit Project
         </div>
         <div class="card-body">
             <form method="post" th:action="@{/project/save}" th:object="${project}">
+
+                <p class="alert alert-danger text-center" role="alert"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Validation error</p>
+
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input th:field="*{name}" type="text" class="form-control" id="name"
                            placeholder="Project Name"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('name')}"
+                       th:text="${error}">Validation error</p>
                 </div>
                 <div class="form-group">
                     <label for="description">Last Name</label>
                     <input th:field="*{description}" type="text" class="form-control" id="description"
                            placeholder="Description"/>
+                    <p class="alert alert-danger text-center" role="alert"
+                       th:each="error: ${#fields.errors('description')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div th:if="${project.id != null}">
@@ -66,9 +78,10 @@
                 </a>
             </form>
 
+        </div>
     </div>
 </div>
-</div>>
+>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

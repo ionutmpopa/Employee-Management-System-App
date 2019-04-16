@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.sci.ems.dao.TimecardDAO;
+import ro.sci.ems.domain.Employee;
 import ro.sci.ems.domain.Timecard;
+import ro.sci.ems.domain.User;
 import ro.sci.ems.exception.ValidationException;
 
 import java.util.Collection;
@@ -20,6 +22,11 @@ public class TimecardService {
     @Autowired
     private TimecardDAO timecardDAO;
 
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
+    private UserService userService;
 
     public Collection<Timecard> listAll() {
         return timecardDAO.getAll();
@@ -35,6 +42,27 @@ public class TimecardService {
 
         return false;
     }
+
+    public Collection<Timecard> listUser() {
+
+        Collection<Timecard> timecards = timecardDAO.getAll();
+        Collection<User> users = userService.listAll();
+
+        for (Timecard timecard : timecards) {
+            long employeeId = timecard.getEmployee_id();
+            Employee employee = employeeService.get(employeeId);
+
+            for (User user : users) {
+
+                if (user.getId() == employee.getId()) {
+
+                    return timecards;
+                }
+            }
+        }
+        return null;
+    }
+
 
     public Timecard findById(long id) {
         return timecardDAO.findById(id);
@@ -69,7 +97,7 @@ public class TimecardService {
             errors.add("Comment is Empty");
         }
         if (!errors.isEmpty()) {
-            throw new ValidationException(errors.toArray(new String[] {}));
+            throw new ValidationException(errors.toArray(new String[]{}));
         }
     }
 

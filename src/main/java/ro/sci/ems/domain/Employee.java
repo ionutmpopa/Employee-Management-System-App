@@ -1,33 +1,34 @@
 package ro.sci.ems.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-/**
- * Used to define the information needed for an Employee.
- * 
- * @author sebi
- *
- */
 public class Employee extends AbstractModel {
 
-	@NotEmpty(message = "{firstName.notempty}")
+	@NotEmpty(message = "First name cannot be empty")
 	private String firstName;
 
-	@NotNull
+	@NotEmpty(message = "Last name cannot be empty")
 	private String lastName;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date birthDate;
+    @NotNull(message = "Cannot be empty!")
+	private Date birthDate = new java.util.Date("11/11/2011");
+
+	@NotEmpty(message = "E-mail address cannot be empty")
+	private String email;
 	
 	private Gender gender;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date employmentDate;
+    @NotNull(message = "Cannot be empty!")
+	private Date employmentDate = new java.util.Date("11/11/2011");
 
+    @Value("${custom.jobTitle}")
 	private Title jobTitle;
 
 	public String getFirstName() {
@@ -78,6 +79,14 @@ public class Employee extends AbstractModel {
 		this.jobTitle = Title.valueOf(jobTitle);
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
 		return "Employee [firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate + ", gender="
@@ -94,6 +103,7 @@ public class Employee extends AbstractModel {
 		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 		result = prime * result + ((jobTitle == null) ? 0 : jobTitle.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -132,6 +142,11 @@ public class Employee extends AbstractModel {
 			if (other.lastName != null)
 				return false;
 		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}

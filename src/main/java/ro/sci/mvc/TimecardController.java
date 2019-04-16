@@ -18,6 +18,7 @@ import ro.sci.ems.exception.ValidationException;
 import ro.sci.ems.service.EmployeeService;
 import ro.sci.ems.service.ProjectService;
 import ro.sci.ems.service.TimecardService;
+import ro.sci.ems.service.UserService;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -37,6 +38,10 @@ public class TimecardController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private UserService userService;
+
+
     @RequestMapping("")
     public ModelAndView listAll() {
         ModelAndView result = new ModelAndView("timecards/list");
@@ -45,13 +50,12 @@ public class TimecardController {
 
         result.addObject("timecards", timecards);
 
-        Map<String, String> employeeNames = new HashMap<>();
-        for (Timecard timecard : timecards) {
-            Employee employee = employeeService.get(timecard.getEmployee_id());
-            employeeNames.put(timecard.getEmployee_id() + "", employee.getFirstName() + " " + employee.getLastName());
-        }
-        result.addObject("employeeNames", employeeNames);
-
+            Map<String, String> employeeNames = new HashMap<>();
+            for (Timecard timecard : timecards) {
+                Employee employee = employeeService.get(timecard.getEmployee_id());
+                employeeNames.put(timecard.getEmployee_id() + "", employee.getFirstName() + " " + employee.getLastName());
+            }
+            result.addObject("employeeNames", employeeNames);
 
         Map<String, String> projectNames = new HashMap<>();
         for (Timecard timecard : timecards) {
@@ -62,6 +66,7 @@ public class TimecardController {
 
         return result;
     }
+
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public ModelAndView add() {
@@ -92,8 +97,8 @@ public class TimecardController {
         return modelAndView;
     }
 
-    @RequestMapping(value= "/delete/{id}", method = RequestMethod.GET)
-    public String delete(@PathVariable("id") long id ) {
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public String delete(@PathVariable("id") long id) {
         timecardService.delete(id);
         return "redirect:/timecards";
     }

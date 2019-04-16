@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserDAO userDAO;
@@ -54,16 +54,24 @@ public class UserService {
         return userDAO.findById(id);
     }
 
+    public User findByEmail(String email) {
+        try {
+            return userDAO.findByEmail(email);
+        } catch (EmptyResultDataAccessException e){
+            e.getStackTrace();
+        }
+        return null;
+    }
+
     public void save(User user) throws ValidationException {
         LOGGER.debug("Saving: " + user);
-        validate(user);
-
+        //validate(user);
         userDAO.update(user);
     }
 
     private void validate(User user) throws ValidationException {
         Date currentDate = new Date();
-        List<String> errors = new LinkedList<String>();
+        List<String> errors = new LinkedList<>();
         if (StringUtils.isEmpty(user.getFirstName())) {
             errors.add("First Name is Empty");
         }
@@ -72,9 +80,12 @@ public class UserService {
             errors.add("Last Name is Empty");
         }
 
-        if (user.getEmail() == null) {
-            errors.add("Gender is Empty");
+        if (StringUtils.isEmpty(user.getPassword())) {
+            errors.add("Password is Empty");
+        }
 
+        if (StringUtils.isEmpty(user.getEmail())) {
+            errors.add("Email is Empty");
 
             if (!errors.isEmpty()) {
                 throw new ValidationException(errors.toArray(new String[]{}));

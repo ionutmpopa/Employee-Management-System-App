@@ -3,6 +3,8 @@ package ro.sci.ems.dao.db;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import ro.sci.ems.dao.TimecardDAO;
 import ro.sci.ems.domain.Timecard;
@@ -21,8 +23,20 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
 
     @Override
     public Collection<Timecard> getAll() {
-        return jdbcTemplate.query("select * from time_card",
-                new TimecardMapper());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+
+        boolean hasAdminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ADMIN"));
+
+        if (hasAdminRole) {
+            return jdbcTemplate.query("select * from time_card",
+                    new TimecardMapper());
+        }
+
+        return jdbcTemplate.query("select * from time_card tc INNER JOIN employee emp ON (tc.employee_id = emp.employee_id) WHERE emp.email = ?",
+                new TimecardMapper(), currentUserName);
     }
 
     @Override
@@ -33,6 +47,7 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
 
     @Override
     public Timecard update(Timecard model) {
+
 
         String sql = "";
         Long newId = null;
@@ -89,7 +104,7 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
             timecard.setDate(new Date(rs.getTimestamp("working_date").getTime()));
             timecard.setEmployee_id(rs.getLong("employee_id"));
             timecard.setProject_id(rs.getLong("project_id"));
-            timecard.setHours(rs.getLong("hours"));
+            timecard.setHours(rs.getDouble("hours"));
 
             return timecard;
         }

@@ -60,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/confirm").permitAll()
 
                // .antMatchers("/employee/delete").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
 
                 .and()
                 .csrf().disable()

@@ -140,7 +140,7 @@ public class ProjectController {
 
         Project project = projectService.findById(id);
         ProjectCost projectCost = new ProjectCost();
-        long cost = projectService.getCostPerProject(id);
+        double cost = projectService.getCostPerProject(id);
         projectCost.setCost(cost);
         projectCost.setName(project.getName());
 
