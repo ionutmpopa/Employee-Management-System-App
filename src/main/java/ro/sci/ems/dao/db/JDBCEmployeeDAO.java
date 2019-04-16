@@ -12,12 +12,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Pure JDBC implementation for {@link EmployeeDAO}.
- * 
- * @author sebi
- *
- */
+
 //@Repository
 public class JDBCEmployeeDAO implements EmployeeDAO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JDBCEmployeeDAO.class);

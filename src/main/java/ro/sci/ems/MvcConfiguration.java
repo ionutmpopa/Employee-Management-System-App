@@ -14,9 +14,7 @@ import ro.sci.mvc.CommonModelInterceptor;
 
 import java.util.Locale;
 
-/**
- * Created by sebi on 4/19/17.
- */
+
 @Configuration
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
