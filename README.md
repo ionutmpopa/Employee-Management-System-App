@@ -2,7 +2,6 @@ Aplicatie pontaj : angajatii ponteaza timp pe proiecte ca sa se poata calcula co
 
 - 1 angajat poate vedea date lui personale 
 - management timecards (CRUD)
-
 - calcul cost per proiect: 15 euro/junior, 30 - medium, 50 - senior 
 - detalii proiect: cine a lucrat pe proiect, cost final
 
@@ -24,5 +23,4 @@ timecards (id, employee_id, project_id, date, comment, hours)
 - creare crud-uri pentru entitati noi cu validari
 - adaugare timecard nou : max 8 ore, daca exista deja pe proiectul 1 in ziua x si se face adaugare noua, update nu insert
 - procesare date: o persoana la cate proiecte a lucrat, nr ore lucrate pe proiect, cost total, proiect
-
-- unit teste 
+- unit teste
