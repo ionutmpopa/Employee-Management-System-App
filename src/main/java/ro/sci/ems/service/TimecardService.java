@@ -5,12 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.sci.ems.dao.TimecardDAO;
-import ro.sci.ems.domain.Employee;
 import ro.sci.ems.domain.Timecard;
-import ro.sci.ems.domain.User;
 import ro.sci.ems.exception.ValidationException;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +25,13 @@ public class TimecardService {
     private EmployeeService employeeService;
 
     @Autowired
+    private CostService costService;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private TimecardService timecardService;
 
     public Collection<Timecard> listAll() {
         return timecardDAO.getAll();
@@ -43,27 +48,6 @@ public class TimecardService {
         return false;
     }
 
-    public Collection<Timecard> listUser() {
-
-        Collection<Timecard> timecards = timecardDAO.getAll();
-        Collection<User> users = userService.listAll();
-
-        for (Timecard timecard : timecards) {
-            long employeeId = timecard.getEmployee_id();
-            Employee employee = employeeService.get(employeeId);
-
-            for (User user : users) {
-
-                if (user.getId() == employee.getId()) {
-
-                    return timecards;
-                }
-            }
-        }
-        return null;
-    }
-
-
     public Timecard findById(long id) {
         return timecardDAO.findById(id);
     }
@@ -76,7 +60,34 @@ public class TimecardService {
 
     private void validate(Timecard timecard) throws ValidationException {
 
-        List<String> errors = new LinkedList<String>();
+        Date currentDate = new Date();
+        List<String> errors = new LinkedList<>();
+        Collection<Timecard> timecards = timecardService.listAll();
+
+
+        double sum = 0;
+        double finalHours = 0;
+        for (Timecard timecard1 : timecards) {
+
+            Timecard myTimecard = timecardService.findById(timecard1.getId());
+
+            if ((timecard.getDate().getTime() == myTimecard.getDate().getTime()) &&
+                    (timecard.getEmployee_id() == myTimecard.getEmployee_id())) {
+
+                sum += myTimecard.getHours();
+                finalHours = timecard.getHours() + sum;
+            }
+        }
+
+        if (finalHours > 8) {
+            errors.add("The hours in a working day reached the limit!");
+        }
+
+        if ((timecard.getHours() % 2) != 0) {
+            errors.add("Only even numbers accepted!");
+        }
+
+
         if (timecard.getEmployee_id() == 0) {
             errors.add("Employee id is Empty");
         }
@@ -92,6 +103,11 @@ public class TimecardService {
         if (timecard.getDate() == null) {
             errors.add("Date is Empty");
         }
+        else {
+            if (currentDate.before((timecard.getDate()))) {
+                errors.add("Cannot add future dates!");
+            }
+        }
 
         if (timecard.getComment().isEmpty()) {
             errors.add("Comment is Empty");
@@ -100,6 +116,8 @@ public class TimecardService {
             throw new ValidationException(errors.toArray(new String[]{}));
         }
     }
+
+
 
     public TimecardDAO getDao() {
         return timecardDAO;

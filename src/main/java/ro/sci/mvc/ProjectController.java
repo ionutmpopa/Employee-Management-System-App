@@ -19,6 +19,7 @@ import ro.sci.ems.service.ProjectService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,14 +32,14 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-//    @Autowired
-//    private StatisticsService statisticsService;
-
     @RequestMapping("")
     public ModelAndView listAll() {
         ModelAndView result = new ModelAndView("project/list");
 
-        Collection<Project> projects = projectService.listAll();
+        Collection<Project> allProjects = projectService.listAll();
+
+        List<Project> projects = new LinkedList<>(allProjects);
+        Collections.sort(projects);
 
         result.addObject("projects", projects);
 
@@ -54,26 +55,6 @@ public class ProjectController {
         return result;
 
     }
-//    @RequestMapping("/add")
-//    public ModelAndView add() {
-//        ModelAndView modelAndView = new ModelAndView("project/add");
-//        modelAndView.addObject("project", new Project());
-//        return modelAndView;
-//    }
-//
-//    @RequestMapping("/edit")
-//    public ModelAndView edit(long id) {
-//        Project employee = projectService.findById(id);
-//        ModelAndView modelAndView = new ModelAndView("project/add");
-//        modelAndView.addObject("project", employee);
-//        return modelAndView;
-//    }
-//
-//    @RequestMapping("/delete")
-//    public String delete(long id) {
-//        projectService.delete(id);
-//        return "redirect:/projects";
-//    }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public ModelAndView add() {

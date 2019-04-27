@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Objects;
 
-public class Project extends AbstractModel{
+public class Project extends AbstractModel implements Comparable<Project>{
 
     @NotEmpty(message = "Project name cannot be empty!")
     private String name;
@@ -49,5 +49,10 @@ public class Project extends AbstractModel{
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Project o) {
+        return this.getName().compareTo(o.getName());
     }
 }

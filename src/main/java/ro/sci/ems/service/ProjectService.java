@@ -70,22 +70,17 @@ public class ProjectService {
     public double getCostPerProject(long projectId) {
 
         Collection<Timecard> timecards = timecardService.listAll();
-        Collection<Employee> employees = employeeService.listAll();
         Collection<Cost> costs = costService.listAll();
 
         double sum = 0;
         double result = 0;
 
         for(Timecard timecard: timecards) {
-
             if(timecard.getProject_id() == projectId) {
-
                 double hours = timecard.getHours();
                 long employeeId = timecard.getEmployee_id();
                 Employee employee = employeeService.get(employeeId);
-
                 for(Cost cost: costs) {
-
                     if (employee.getJobTitle() == cost.getTitle().toString()) {
                         result = cost.getCost() * hours;
                     }

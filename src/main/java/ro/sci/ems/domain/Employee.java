@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class Employee extends AbstractModel {
+public class Employee extends AbstractModel implements Comparable<Employee> {
 
 	@NotEmpty(message = "First name cannot be empty")
 	private String firstName;
@@ -151,4 +151,8 @@ public class Employee extends AbstractModel {
 		return true;
 	}
 
+    @Override
+    public int compareTo(Employee o) {
+        return this.getFirstName().compareTo(o.getFirstName());
+    }
 }

@@ -5,7 +5,7 @@
 
 	<bean id="imDAO" class="ro.sci.ems.dao.inmemory.IMEmployeeDAO"/>
 	<bean id="employeeService" class="ro.sci.ems.service.EmployeeService">
-	    <property name="dao" ref="imDAO" />
+	    <property name="myDao" ref="imDAO" />
 	</bean>
 
 </beans>

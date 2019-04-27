@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import ro.sci.ems.dao.TimecardDAO;
 import ro.sci.ems.domain.Timecard;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,6 +21,14 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+//    @Autowired
+//    private EmployeeService employeeService;
+
+    public JdbcTemplateTimecardDAO(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
 
     @Override
     public Collection<Timecard> getAll() {
@@ -48,9 +57,9 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
     @Override
     public Timecard update(Timecard model) {
 
-
         String sql = "";
         Long newId = null;
+
         if (model.getId() > 0) {
             sql = "update time_card set user_comment=?, employee_id=?, project_id=?, hours=?, working_date=? "
                     + "where time_id = ? returning time_id";
@@ -85,7 +94,6 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
             });
         }
         model.setId(newId);
-
         return model;
     }
 

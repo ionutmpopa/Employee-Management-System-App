@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import ro.sci.ems.domain.Employee;
+import ro.sci.ems.domain.EmployeeCost;
 import ro.sci.ems.exception.ValidationException;
 import ro.sci.ems.service.EmployeeService;
+import ro.sci.ems.service.TimecardService;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -30,12 +30,16 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private TimecardService timecardService;
+
     @RequestMapping("")
     public ModelAndView list() {
         ModelAndView result = new ModelAndView("employee/list");
 
-
-        Collection<Employee> employees = employeeService.listAll();
+        Collection<Employee> allEmployees = employeeService.listAll();
+        List<Employee> employees = new LinkedList<>(allEmployees);
+        Collections.sort(employees);
         result.addObject("employees", employees);
 
         return result;
@@ -99,4 +103,42 @@ public class EmployeeController {
 
         return modelAndView;
     }
+
+    @RequestMapping(value = "/calculateEmployeeCost{id}", method = RequestMethod.GET)
+    public ModelAndView calculateEmployeeCost(@PathVariable("id") long id) {
+        ModelAndView result = new ModelAndView("employee/details");
+
+        Employee employee = employeeService.get(id);
+        EmployeeCost employeeCost = new EmployeeCost();
+        double cost = employeeService.getCostPerEmployee(id);
+        Map<String, Double> myProjectList = employeeService.getProjectCostsPerEmployee(id);
+        employeeCost.setCost(cost);
+        employeeCost.setName(employee.getFirstName() + " " + employee.getLastName());
+        employeeCost.setProjectNames(myProjectList);
+
+        result.addObject("employeeCost", employeeCost);
+        result.addObject("myProjectList", myProjectList);
+
+        return result;
+    }
+
+    @RequestMapping(value = "/calculateDailyEmployeeCost{id}", method = RequestMethod.GET)
+    public ModelAndView calculateDailyEmployeeCost(@PathVariable("id") long id) {
+        ModelAndView result = new ModelAndView("employee/dailydetails");
+
+        Employee employee = employeeService.get(id);
+        EmployeeCost employeeCost = new EmployeeCost();
+        double cost = employeeService.getCostPerEmployee(id);
+        List<String> myProjectList = employeeService.getDailyProjectCostsPerEmployee(id);
+        employeeCost.setCost(cost);
+        employeeCost.setName(employee.getFirstName() + " " + employee.getLastName());
+        employeeCost.setProjectName(myProjectList);
+        Collections.sort(myProjectList, Collections.reverseOrder());
+
+        result.addObject("employeeCost", employeeCost);
+        result.addObject("myProjectList", myProjectList);
+
+        return result;
+    }
+
 }

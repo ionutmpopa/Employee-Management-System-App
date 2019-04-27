@@ -2,6 +2,19 @@
 <html lang="en" xmlns:th="http://wwww.thymeleaf.org"
       xmlns:sec="org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect">
 <head>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+    });
+
+    </script>
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -16,7 +29,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand h1" href="#">EMS</a>
+        <a class="navbar-brand h1" href="/">EMS</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,38 +60,44 @@
         Add Employee
     </a>
 
+    <input class="form-control" id="myInput" type="text" placeholder="Search.."/>
+
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
             <th>E-mail</th>
-            <th>Birth Date</th>
-            <th>Gender</th>
+            <!--<th>Birth Date</th>-->
             <th>Employment Date</th>
             <th>Job Title</th>
             <th>Action</th>
         </tr>
         </thead>
 
-        <tbody sec:authorize="hasAuthority('ADMIN')">
+        <tbody sec:authorize="hasAuthority('ADMIN')" id="myTable">
         <tr th:each="tempEmployee: ${employees}">
             <td th:text="${tempEmployee.firstName}"></td>
             <td th:text="${tempEmployee.lastName}"></td>
             <td th:text="${tempEmployee.email}"></td>
-            <td th:text="${#dates.format(tempEmployee.birthDate, 'dd-MMM-yyyy')}"></td>
-            <td th:text="${tempEmployee.gender}"></td>
+            <!--<td th:text="${#dates.format(tempEmployee.birthDate, 'dd-MMM-yyyy')}"></td>-->
             <td th:text="${#dates.format(tempEmployee.employmentDate, 'dd-MMM-yyyy')}"></td>
             <td th:text="${tempEmployee.jobTitle}"></td>
             <td>
+                <span>
                 <a th:href="@{/employee/edit/{id} (id=${tempEmployee.id})}" class="btn btn-info bt-sm mb-3">
                     Edit
                 </a>
-
                 <a th:href="@{/employee/delete/{id} (id=${tempEmployee.id})}" class="btn btn-danger bt-sm mb-3">
                     Delete
                 </a>
-                <!--<td><a th:href="@{/appel/delete/{id}(id=${appel.id})}" >Delete</a></td>-->
+                    <a th:href="@{/employee/calculateDailyEmployeeCost{id} (id=${tempEmployee.id})}" class="btn btn-success bt-sm mb-3">
+                    Daily Cost
+                </a>
+                <a th:href="@{/employee/calculateEmployeeCost{id} (id=${tempEmployee.id})}" class="btn btn-info bt-sm mb-3">
+                    Total Cost
+                </a>
+                </span>
             </td>
         </tr>
         </tbody>

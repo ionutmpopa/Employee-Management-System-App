@@ -3,12 +3,8 @@ package ro.sci.ems;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ro.sci.ems.dao.EmployeeDAO;
-import ro.sci.ems.dao.db.JdbcTemplateEmployeeDAO;
-import ro.sci.ems.service.EmployeeService;
 
 import javax.sql.DataSource;
 
@@ -26,35 +22,6 @@ public class ApplicationConfiguration {
 
 	@Value("${db.name}")
 	private String dbName;
-
-	/*@Bean
-	public EmployeeService employeeService() {
-		EmployeeService ems = new EmployeeService();
-		
-		ems.setDao(employeeDAO());
-		return ems;
-	}*/
-	
-	/*@Bean
-	public EmployeeDAO employeeDAO() {
-		return new IMEmployeeDAO();
-	}
-
-*/
-
-/*		@Bean
-   public EmployeeDAO employeeDAO() {
-		return new JDBCEmployeeDAO(dbHost,
-				"5432",
-				dbName,
-				dbUser ,
-				dbPassword);
-   }*/
-
-/*	@Bean
-	public EmployeeDAO employeeDAO() {
-		return new JdbcTemplateEmployeeDAO(dataSource());
-	}*/
 
 	@Bean
 	public DataSource dataSource() {

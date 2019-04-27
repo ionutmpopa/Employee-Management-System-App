@@ -2,6 +2,19 @@
 <html lang="en" xmlns:th="http://wwww.thymeleaf.org"
       xmlns:sec="org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect">
 <head>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+    });
+
+    </script>
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -14,7 +27,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand h1" href="#">EMS</a>
+        <a class="navbar-brand h1" href="/">EMS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -22,12 +35,12 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
-                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
             </div>
         </div>
     </div>
@@ -42,9 +55,12 @@
     <h3>Time cards List</h3>
     <hr/>
     <!--Button add projects-->
-    <a th:href="@{/timecards/add}" class="btn btn-primary bt-sm mb-3">
+    <a sec:authorize="isAuthenticated()" th:href="@{/timecards/add}" class="btn btn-primary bt-sm mb-3">
         Add Time card
     </a>
+
+    <input class="form-control" id="myInput" type="text" placeholder="Search.."/>
+
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
         <tr>
@@ -56,7 +72,7 @@
             <th sec:authorize="hasAuthority('ADMIN')">Action</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="myTable">
         <tr th:each="tempTimecard: ${timecards}">
             <td th:text="${#dates.format(tempTimecard.date, 'dd-MMM-yyyy')}"></td>
             <td th:text="${tempTimecard.hours}"></td>

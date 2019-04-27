@@ -8,7 +8,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class IMProjectDAO extends IMBaseDAO<Project> implements ProjectDAO{
+//@Repository
+public class IMProjectDAO extends IMBaseDAO<Project> implements ProjectDAO {
 
     @Override
     public Collection<Project> searchByName(String query) {
@@ -16,14 +17,16 @@ public class IMProjectDAO extends IMBaseDAO<Project> implements ProjectDAO{
             return getAll();
         }
 
-        Collection<Project> all = new LinkedList<>(getAll());
+        Collection<Project> all = new LinkedList<Project>(getAll());
         for (Iterator<Project> it = all.iterator(); it.hasNext();) {
-            Project pjt = it.next();
-            String ss = pjt.getName() + " " + pjt.getDescription();
+            Project emp = it.next();
+            String ss = emp.getName();
             if (!ss.toLowerCase().contains(query.toLowerCase())) {
                 it.remove();
             }
         }
         return all;
     }
+
+
 }

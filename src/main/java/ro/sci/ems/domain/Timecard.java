@@ -10,12 +10,12 @@ import java.util.Objects;
 public class Timecard extends AbstractModel {
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @NotNull(message = "Cannot be emply!")
-    private Date date;
+    @NotNull(message = "Cannot be empty!")
+    private Date date = new Date();
 
     private String comment;
 
-    @Range(min = 1, message = "Minimum 1 hour is expected!")
+    @Range(min = 2, max = 8, message = "Minimum 2 hour is expected! Maximum 8!")
     private double hours;
 
     @Range(min = 1, message = "Must be a valid entry!")

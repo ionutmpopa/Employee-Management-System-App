@@ -80,8 +80,8 @@ public class JdbcTemplateCostDAO implements CostDAO {
     @Override
     public Collection<Cost> searchByName(String query) {
         return jdbcTemplate.query("select * from cost "
-                        + "where lower(job_title || ' ' || job_cost) like ?",
-                new String[]{"%" + query.toLowerCase() + "%"},
+                        + "where lower(job_title || ' ' || job_cost) like '%?%'",
+                new String[]{query.toLowerCase()},
                 new CostMapper());
     }
 

@@ -50,12 +50,12 @@ public class TimecardController {
 
         result.addObject("timecards", timecards);
 
-            Map<String, String> employeeNames = new HashMap<>();
-            for (Timecard timecard : timecards) {
-                Employee employee = employeeService.get(timecard.getEmployee_id());
-                employeeNames.put(timecard.getEmployee_id() + "", employee.getFirstName() + " " + employee.getLastName());
-            }
-            result.addObject("employeeNames", employeeNames);
+        Map<String, String> employeeNames = new HashMap<>();
+        for (Timecard timecard : timecards) {
+            Employee employee = employeeService.get(timecard.getEmployee_id());
+            employeeNames.put(timecard.getEmployee_id() + "", employee.getFirstName() + " " + employee.getLastName());
+        }
+        result.addObject("employeeNames", employeeNames);
 
         Map<String, String> projectNames = new HashMap<>();
         for (Timecard timecard : timecards) {
@@ -72,14 +72,25 @@ public class TimecardController {
     public ModelAndView add() {
         ModelAndView modelAndView = new ModelAndView("timecards/add");
 
+        Collection<Timecard> timecards = timecardService.listAll();
+
+        Map<Long, Double> timeCards = new HashMap<>();
+        for (Timecard myTimecard : timecards) {
+            timeCards.put(myTimecard.getEmployee_id(), myTimecard.getHours());
+        }
+
         Collection<Project> projects = projectService.listAll();
         modelAndView.addObject("projects", projects);
 
         Collection<Employee> employees = employeeService.listAll();
         modelAndView.addObject("employees", employees);
 
+        modelAndView.addObject("timecards", timecards);
+
         modelAndView.addObject("timecard", new Timecard());
         return modelAndView;
+
+
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -119,7 +130,7 @@ public class TimecardController {
 
                 List<String> errors = new LinkedList<>();
                 errors.add(ex.getMessage());
-                modelAndView = new ModelAndView("projects/add");
+                modelAndView = new ModelAndView("timecards/add");
                 modelAndView.addObject("errors", errors);
                 modelAndView.addObject("timecard", timecard);
             }
@@ -139,4 +150,6 @@ public class TimecardController {
 
         return modelAndView;
     }
+
+
 }

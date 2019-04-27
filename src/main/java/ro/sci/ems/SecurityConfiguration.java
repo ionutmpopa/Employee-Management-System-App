@@ -42,11 +42,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder);
 
-
-//        auth.inMemoryAuthentication()
-//                .withUser("admin").password("admin").roles("ADMIN")
-//        .and()
-//                .withUser("user").password("user").roles("USER");
     }
 
     @Override
@@ -57,7 +52,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers("/confirm").permitAll()
 
-               // .antMatchers("/employee/delete").hasRole("ADMIN")
                 //.anyRequest().authenticated()
 
                 .and()
@@ -65,7 +59,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
-
 
                 .and()
                 .logout().logoutSuccessUrl("/").permitAll()

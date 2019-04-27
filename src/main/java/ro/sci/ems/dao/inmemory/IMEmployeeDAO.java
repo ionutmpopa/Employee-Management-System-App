@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-
+//@Repository("myDao")
 public class IMEmployeeDAO extends IMBaseDAO<Employee> implements EmployeeDAO {
 
 	@Override
@@ -16,7 +16,7 @@ public class IMEmployeeDAO extends IMBaseDAO<Employee> implements EmployeeDAO {
 		if (StringUtils.isEmpty(query)) {
 			return getAll();
 		}
-
+		
 		Collection<Employee> all = new LinkedList<Employee>(getAll());
 		for (Iterator<Employee> it = all.iterator(); it.hasNext();) {
 			Employee emp = it.next();

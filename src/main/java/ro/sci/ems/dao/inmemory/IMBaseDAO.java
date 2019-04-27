@@ -1,12 +1,12 @@
 package ro.sci.ems.dao.inmemory;
 
+import ro.sci.ems.dao.BaseDAO;
+import ro.sci.ems.domain.AbstractModel;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-
-import ro.sci.ems.dao.BaseDAO;
-import ro.sci.ems.domain.AbstractModel;
 
 public class IMBaseDAO<T extends AbstractModel> implements BaseDAO<T> {
 	private Map<Long, T> models = new HashMap<Long, T>();

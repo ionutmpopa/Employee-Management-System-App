@@ -16,7 +16,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand h1" href="#">EMS</a>
+        <a class="navbar-brand h1" href="/">EMS</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,6 +73,9 @@
                     <p class="alert alert-danger text-center" role="alert"
                        th:each="error: ${#fields.errors('birthDate')}"
                        th:text="${error}">Validation error</p>
+                    <div th:if="${errors != null}" class="alert alert-danger text-center" role="alert">
+                        <div th:text="${errors}"/>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="jobTitle">Job Title</label>

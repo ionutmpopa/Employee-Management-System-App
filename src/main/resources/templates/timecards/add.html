@@ -1,64 +1,36 @@
 <!DOCTYPE html>
 
 <html lang="en" xmlns:th="http://wwww.thymeleaf.org"
-
       xmlns:sec="org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect">
 
 <head>
 
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-
     <script>
-
         $(document).ready(function () {
-
             var selectedProject = 0;
-
             var selectedEmployee = 0;
-
             $('#inputGroupSelect01').on('change', function () {
-
                 selectedEmployee = $(this).find("option:selected").val();
-
-                alert(selectedEmployee);
-
             });
-
-
 
             $('#inputGroupSelect02').on('change', function () {
-
                 selectedProject = $(this).find("option:selected").val();
-
-                alert(selectedProject);
-
             });
 
-
-
             $("#myform").on("submit", function () {
-
                 var selectedProjectWithoutCommas = selectedProject.replace(/,/g, '');
-
                 var selectedEmployeeWithoutCommas = selectedEmployee.replace(/,/g, '');
-
                 document.getElementById('project_id').value = selectedProjectWithoutCommas;
-
                 document.getElementById('employee_id').value = selectedEmployeeWithoutCommas;
-
                 return true;
-
             })
-
         });
 
     </script>
-
     <!-- Required meta tags -->
-
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-
 
 
     <!-- Bootstrap CSS -->
@@ -66,7 +38,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
     <link rel="stylesheet" href="/css/custom.css"/>
-
 
 
     <title>Employee Management System</title>
@@ -77,8 +48,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand h1" href="#">EMS</a>
-
+        <a class="navbar-brand h1" href="/">EMS</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,23 +57,21 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
-                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
-
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
             </div>
         </div>
     </div>
 </nav>
 
 
-<div class="container mt-5">
+<div sec:authorize="isAuthenticated()" class="container mt-5">
 
     <div class="card text-white bg-dark mb-3">
         <div class="card-header">
@@ -111,12 +79,11 @@
         </div>
 
         <div class="card-body">
-                <form method="post" th:action="@{/timecards/save}" th:object="${timecard}" id="myform">
-
-                    <p class="alert alert-danger text-center" role="alert"
-                       th:if="${#fields.hasGlobalErrors()}"
-                       th:each="error : ${#fields.errors('global')}"
-                       th:text="${error}" >Validation error</p>
+            <form method="post" th:action="@{/timecards/save}" th:object="${timecard}" id="myform">
+                <p class="alert alert-danger text-cformr" role="alert"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Validation error</p>
 
                 <div class="form-group">
                     <label for="date">Date</label>
@@ -127,6 +94,7 @@
                        th:text="${error}">Validation error</p>
                 </div>
 
+
                 <div class="form-group">
                     <label for="hours">Hours</label>
                     <input th:field="*{hours}" type="text" class="form-control" id="hours"
@@ -134,6 +102,9 @@
                     <p class="alert alert-danger text-center" role="alert"
                        th:each="error: ${#fields.errors('hours')}"
                        th:text="${error}">Validation error</p>
+                    <div th:if="${errors != null}" class="alert alert-danger text-center" role="alert">
+                        <div th:text="${errors}"/>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -141,7 +112,8 @@
                     <select class="custom-select" id="inputGroupSelect01">
                         <option selected="">Choose...</option>
                         <div th:each="employee : ${employees}">
-                            <option th:value="${employee.id}" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
+                            <option th:value="${employee.id}"
+                                    th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
                         </div>
                     </select>
                     <p class="alert alert-danger text-center" role="alert"
@@ -181,14 +153,15 @@
                 </div>
 
                 <input name="id" type="hidden" th:value="${timecard.id}"/>
+
                 <input class="btn btn-success" type="submit" value="Save"/>
 
                 <a href="/timecards">
                     <input class="btn btn-danger" type="button" value="Cancel"/>
                 </a>
-            </form>
-        </div>
+        </form>
     </div>
+</div>
 </div>
 </body>
 </html>

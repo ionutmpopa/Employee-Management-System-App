@@ -82,7 +82,7 @@ public class EmployeeServiceTestWithConfigurationAndMocking extends BaseEmployee
 		em.setFirstName("Cucu");
 		em.setLastName("Gogu");
 		getEmployeeService().save(em);
-		Assert.assertEquals(2, getEmployeeService().search("Gogu").size());
+		Assert.assertEquals(2, getEmployeeService().search("gogu").size());
 
 	}
 
