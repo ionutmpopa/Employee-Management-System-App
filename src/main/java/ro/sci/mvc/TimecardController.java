@@ -63,7 +63,6 @@ public class TimecardController {
             projectNames.put(timecard.getProject_id() + "", project.getName());
         }
         result.addObject("projectNames", projectNames);
-
         return result;
     }
 
@@ -78,18 +77,13 @@ public class TimecardController {
         for (Timecard myTimecard : timecards) {
             timeCards.put(myTimecard.getEmployee_id(), myTimecard.getHours());
         }
-
         Collection<Project> projects = projectService.listAll();
         modelAndView.addObject("projects", projects);
-
         Collection<Employee> employees = employeeService.listAll();
         modelAndView.addObject("employees", employees);
-
         modelAndView.addObject("timecards", timecards);
-
         modelAndView.addObject("timecard", new Timecard());
         return modelAndView;
-
 
     }
 
@@ -150,6 +144,4 @@ public class TimecardController {
 
         return modelAndView;
     }
-
-
 }
