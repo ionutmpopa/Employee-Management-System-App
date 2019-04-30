@@ -76,6 +76,8 @@ public class EmployeeService {
     private void validate(Employee employee) throws ValidationException {
         Date currentDate = new Date();
         List<String> errors = new LinkedList<String>();
+
+
         if (StringUtils.isEmpty(employee.getFirstName())) {
             errors.add("First Name is Empty");
         }
@@ -117,7 +119,7 @@ public class EmployeeService {
             errors.add("EmploymentDate is Empty");
         } else {
             if (currentDate.before(employee.getEmploymentDate())) {
-                errors.add("EmploymentDate in future");
+                errors.add("Employment Date in future");
             }
         }
 

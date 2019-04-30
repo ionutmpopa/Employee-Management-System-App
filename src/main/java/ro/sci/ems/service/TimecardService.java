@@ -3,6 +3,8 @@ package ro.sci.ems.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ro.sci.ems.dao.TimecardDAO;
 import ro.sci.ems.domain.Timecard;
@@ -63,30 +65,30 @@ public class TimecardService {
         Date currentDate = new Date();
         List<String> errors = new LinkedList<>();
         Collection<Timecard> timecards = timecardService.listAll();
-
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean hasAdminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ADMIN"));
         double sum = 0;
         double finalHours = 0;
+
         for (Timecard timecard1 : timecards) {
 
             Timecard myTimecard = timecardService.findById(timecard1.getId());
 
             if ((timecard.getDate().getTime() == myTimecard.getDate().getTime()) &&
                     (timecard.getEmployee_id() == myTimecard.getEmployee_id())) {
-
                 sum += myTimecard.getHours();
                 finalHours = timecard.getHours() + sum;
             }
         }
 
-//        if (finalHours > 8) {
-//            errors.add("The hours in a working day reached the limit!");
-//        }
+        if ((finalHours > 8) && (!hasAdminRole)) {
+            errors.add("The hours in a working day reached the limit! Contact your sys admin.");
+        }
 
         if ((timecard.getHours() % 2) != 0) {
             errors.add("Only even numbers accepted!");
         }
-
 
         if (timecard.getEmployee_id() == 0) {
             errors.add("Employee id is Empty");
@@ -102,13 +104,16 @@ public class TimecardService {
 
         if (timecard.getDate() == null) {
             errors.add("Date is Empty");
-        }
-        else {
+        } else {
             if (currentDate.before((timecard.getDate()))) {
                 errors.add("Cannot add future dates!");
             }
+            if (!hasAdminRole) {
+                if (currentDate.getTime() > timecard.getDate().getTime()) {
+                    errors.add("Cannot add past dates!");
+                }
+            }
         }
-
         if (timecard.getComment().isEmpty()) {
             errors.add("Comment is Empty");
         }
@@ -116,7 +121,6 @@ public class TimecardService {
             throw new ValidationException(errors.toArray(new String[]{}));
         }
     }
-
 
 
     public TimecardDAO getDao() {
