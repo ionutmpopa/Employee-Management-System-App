@@ -2,6 +2,18 @@
 <html lang="en" xmlns:th="http://wwww.thymeleaf.org"
       xmlns:sec="org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect">
 <head>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+    });
+    </script>
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -14,7 +26,7 @@
     <title>Employee Management System</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
     <div class="container">
         <a class="navbar-brand h1" href="/">EMS</a>
 
@@ -24,12 +36,12 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="#">Home</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
-                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/employee">Employees</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/project">Projects</a>
+                <a  sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/cost">Costs</a>
+                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/timecards">Time cards</a>
+                <a  sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/logout">Log Out</a>
+                <a  sec:authorize="!isAuthenticated()" class="nav-item nav-link active" href="/login">Log In</a>
             </div>
         </div>
     </div>
@@ -40,12 +52,20 @@
     <hr/>
 
     <!--Button add projects-->
-    <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/cost/add}" class="btn btn-primary bt-sm mb-3">
+    <td>
+    <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/cost/add}" class="btn btn-info bt-sm mb-3">
         Add Cost
     </a>
-
+    <a sec:authorize="hasAuthority('ADMIN')">
+        <input class="form-control mr-sm-2" id="myInput" type="search" placeholder="Search" aria-label="Search"/>
+    </a>
+    </td>
     <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
+        <thead sec:authorize="hasAuthority('USER')">
+        <td class="alert alert-danger text-center" role="alert">
+            Only ADMINs can see the content of this page!</td>
+        </thead>
+        <thead sec:authorize="hasAuthority('ADMIN')">
         <tr>
             <th>Job Title</th>
             <th>Cost</th>
@@ -53,7 +73,7 @@
         </tr>
         </thead>
 
-        <tbody sec:authorize="hasAuthority('ADMIN')">
+        <tbody sec:authorize="hasAuthority('ADMIN')" id="myTable">
         <tr th:each="tempCost: ${costs}">
             <td th:text="${tempCost.title}"></td>
             <td th:text="${tempCost.cost}"></td>

@@ -25,7 +25,7 @@
     <title>Employee Management System</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
     <div class="container">
         <a class="navbar-brand h1" href="/">EMS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
@@ -35,12 +35,12 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
-                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/employee">Employees</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/project">Projects</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/cost">Costs</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/timecards">Time cards</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/logout">Log Out</a>
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link active" href="/login">Log In</a>
             </div>
         </div>
     </div>
@@ -55,14 +55,17 @@
     <h3>Time cards List</h3>
     <hr/>
     <!--Button add projects-->
-    <a sec:authorize="isAuthenticated()" th:href="@{/timecards/add}" class="btn btn-primary bt-sm mb-3">
-        Add Time card
-    </a>
-
-    <input class="form-control" id="myInput" type="text" placeholder="Search.."/>
+    <td>
+        <a sec:authorize="isAuthenticated()" th:href="@{/timecards/add}" class="btn btn-info bt-sm mb-3">
+            Add Time card
+        </a>
+        <a sec:authorize="isAuthenticated()">
+            <input class="form-control mr-sm-2" id="myInput" type="search" placeholder="Search" aria-label="Search"/>
+        </a>
+    </td>
 
     <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
+        <thead sec:authorize="isAuthenticated()">
         <tr>
             <th>Date</th>
             <th>Hours</th>
@@ -89,7 +92,8 @@
             <td th:text="${tempTimecard.comment}"></td>
 
             <td sec:authorize="hasAuthority('ADMIN')">
-                <a th:href="@{/timecards/edit/{id} (id=${tempTimecard.id})}" class="btn btn-info bt-sm mb-3">
+                <a th:href="@{/timecards/edit/{id}/{empId}/{prId} (id=${tempTimecard.id}, empId=${tempTimecard.employee_id}, prId=${tempTimecard.project_id})}"
+                   class="btn btn-info bt-sm mb-3">
                     Edit
                 </a>
                 <a th:href="@{/timecards/delete/{id} (id=${tempTimecard.id})}" class="btn btn-danger bt-sm mb-3">

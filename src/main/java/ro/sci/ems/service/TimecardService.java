@@ -79,9 +79,9 @@ public class TimecardService {
             }
         }
 
-        if (finalHours > 8) {
-            errors.add("The hours in a working day reached the limit!");
-        }
+//        if (finalHours > 8) {
+//            errors.add("The hours in a working day reached the limit!");
+//        }
 
         if ((timecard.getHours() % 2) != 0) {
             errors.add("Only even numbers accepted!");

@@ -93,16 +93,16 @@ public class TimecardController {
 
     }
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public ModelAndView edit(@PathVariable("id") long id) {
+    @RequestMapping(value = "/edit/{id}/{empId}/{prId}", method = RequestMethod.GET)
+    public ModelAndView edit(@PathVariable("id") long id, @PathVariable("empId") long empId, @PathVariable("prId") long prId) {
         Timecard timecard = timecardService.findById(id);
         ModelAndView modelAndView = new ModelAndView("timecards/add");
         modelAndView.addObject("timecard", timecard);
 
-        Collection<Project> projects = projectService.listAll();
+        Project projects = projectService.findById(prId);
         modelAndView.addObject("projects", projects);
 
-        Collection<Employee> employees = employeeService.listAll();
+        Employee employees = employeeService.get(empId);
         modelAndView.addObject("employees", employees);
 
         return modelAndView;

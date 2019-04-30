@@ -14,7 +14,7 @@
     <title>Employee Management System</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
     <div class="container">
         <a class="navbar-brand h1" href="/">EMS</a>
 
@@ -24,17 +24,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link" href="/">Home</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/employee">Employees</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/project">Projects</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" href="/cost">Costs</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/timecards">Time cards</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
-                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" href="/login">Log In</a>
+                <a class="nav-item nav-link active" href="/">Home</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/employee">Employees</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/project">Projects</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/cost">Costs</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/timecards">Time cards</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/logout">Log Out</a>
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link active" href="/login">Log In</a>
             </div>
         </div>
     </div>
 </nav>
+
+<thead sec:authorize="hasAuthority('USER')">
+<td class="alert alert-danger text-center" role="alert">
+    Only ADMINs can see the content of this page!</td>
+</thead>
 
 <div sec:authorize="hasAuthority('ADMIN')" class="container mt-5">
     <div class="card text-white bg-dark mb-3">

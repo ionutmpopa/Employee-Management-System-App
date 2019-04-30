@@ -14,7 +14,7 @@
     <title>Employee Management System</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
     <div class="container">
         <a class="navbar-brand h1" href="/">EMS</a>
 
@@ -24,13 +24,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link" href="/">Home</a>
-                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" href="/logout">Log Out</a>
+                <a class="nav-item nav-link active" href="/">Home</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/logout">Log Out</a>
                 <a sec:authorize="!isAuthenticated()" class="nav-item nav-link active" href="/login">Log In</a>
             </div>
         </div>
     </div>
 </nav>
+
+<body th:style="'background: url(/images/workplace.jpg) no-repeat center center fixed;'">
+</body>
 
 <div class="container mt-5">
 
@@ -40,11 +43,11 @@
             <div class="card text-white bg-dark mb-3" style="max-width: 24rem;">
                 <div class="card-body">
 
-                    <h5 class="card-title">Registration</h5>
+                    <h5 class="card-title">Sign Up</h5>
                     <hr/>
 
                     <div th:if="${param.success}" class="alert alert-danger text-center" role="alert">
-                        You've registered to our App! You can now Log In!
+                        You've registered to our App! You can now Sign In!
                     </div>
                     <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
                         This user already exists!
@@ -102,7 +105,7 @@
                                th:text="${error}">Validation error</p>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">Register</button>
+                            <button type="submit" class="btn btn-success">Sign Up</button>
                             <span>Already registered? <a href="/" th:href="@{/login}">Log In!</a></span>
                         </div>
 
