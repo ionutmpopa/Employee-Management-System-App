@@ -37,17 +37,17 @@
     <br/>
     <div class="text-center">
         <div class="col-md-5 btn-group-vertical center-block">
-            <a sec:authorize="!isAuthenticated()" th:href="@{/}" class="btn btn-info btn-lg mb-1"> Home </a>
-            <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/employee}" class="btn btn-info btn-lg mb-1">
-                Employees </a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/}" class="btn btn-info btn-lg mb-1"><b>Home</b></a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/employee}" class="btn btn-info btn-lg mb-1">
+                <b>Employees </b></a>
             <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/project}" class="btn btn-info btn-lg mb-1">
-                Projects </a>
-            <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/cost}" class="btn btn-info btn-lg mb-1"> Costs </a>
-            <a sec:authorize="isAuthenticated()" th:href="@{/timecards}" class="btn btn-info btn-lg mb-1"> Time
-                cards </a>
-            <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-info btn-lg mb-1"> Log Out </a>
-            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn btn-info btn-lg mb-1"> Log In </a>
-            <a sec:authorize="!isAuthenticated()" th:href="@{/register}" class="btn btn-info btn-lg mb-1"> Sign Up </a>
+                <b>Projects </b></a>
+            <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/cost}" class="btn btn-info btn-lg mb-1"> <b>Costs </b></a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/timecards}" class="btn btn-info btn-lg mb-1"> <b>Time
+                cards </b></a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-info btn-lg mb-1"> <b>Log Out </b></a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn btn-info btn-lg mb-1"> <b>Log In </b></a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/register}" class="btn btn-info btn-lg mb-1"> <b>Sign Up </b></a>
         </div>
     </div>
 </div>

@@ -2,6 +2,16 @@
 <html lang="en" xmlns:th="http://wwww.thymeleaf.org"
       xmlns:sec="org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect">
 <head>
+    <script>
+    function ConfirmSave()
+    {
+      var x = confirm("Are you sure you want to save this?");
+      if (x)
+          return true;
+      else
+        return false;
+    }
+    </script>
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -75,7 +85,7 @@
             </div>
 
 
-            <input class="btn btn-success" type="submit" value="Save"/>
+            <input class="btn btn-success" Onclick="return ConfirmSave();" type="submit" value="Save"/>
 
             <a href="/cost">
                 <input class="btn btn-danger" type="button" value="Cancel"/>

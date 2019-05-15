@@ -13,6 +13,15 @@
         });
     });
     });
+
+    function ConfirmDelete()
+    {
+      var x = confirm("Are you sure you want to delete?");
+      if (x)
+          return true;
+      else
+        return false;
+    }
     </script>
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
@@ -82,7 +91,7 @@
                     Edit
                 </a>
 
-                <a th:href="@{/cost/delete/{id} (id=${tempCost.id})}" class="btn btn-danger bt-sm mb-3">
+                <a th:href="@{/cost/delete/{id} (id=${tempCost.id})}" Onclick="return ConfirmDelete();" class="btn btn-danger bt-sm mb-3">
                     Delete
                 </a>
 

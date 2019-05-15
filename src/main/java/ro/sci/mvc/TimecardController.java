@@ -47,7 +47,7 @@ public class TimecardController {
         ModelAndView result = new ModelAndView("timecards/list");
 
         Collection<Timecard> timecards = timecardService.listAll();
-
+        Collections.sort((List)timecards, Collections.reverseOrder());
         result.addObject("timecards", timecards);
 
         Map<String, String> employeeNames = new HashMap<>();
@@ -88,7 +88,8 @@ public class TimecardController {
     }
 
     @RequestMapping(value = "/edit/{id}/{empId}/{prId}", method = RequestMethod.GET)
-    public ModelAndView edit(@PathVariable("id") long id, @PathVariable("empId") long empId, @PathVariable("prId") long prId) {
+    public ModelAndView edit(@PathVariable("id") long id, @PathVariable("empId") long empId,
+                             @PathVariable("prId") long prId) {
         Timecard timecard = timecardService.findById(id);
         ModelAndView modelAndView = new ModelAndView("timecards/add");
         modelAndView.addObject("timecard", timecard);

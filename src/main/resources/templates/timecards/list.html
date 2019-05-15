@@ -14,6 +14,14 @@
     });
     });
 
+    function ConfirmDelete()
+    {
+      var x = confirm("Are you sure you want to delete?");
+      if (x)
+          return true;
+      else
+        return false;
+    }
     </script>
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
@@ -35,7 +43,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/employee">Employees</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/employee">Employees</a>
                 <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/project">Projects</a>
                 <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/cost">Costs</a>
                 <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/timecards">Time cards</a>
@@ -96,7 +104,7 @@
                    class="btn btn-info bt-sm mb-3">
                     Edit
                 </a>
-                <a th:href="@{/timecards/delete/{id} (id=${tempTimecard.id})}" class="btn btn-danger bt-sm mb-3">
+                <a th:href="@{/timecards/delete/{id} (id=${tempTimecard.id})}" Onclick="return ConfirmDelete();" class="btn btn-danger bt-sm mb-3">
                     Delete
                 </a>
             </td>

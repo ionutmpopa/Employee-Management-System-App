@@ -105,12 +105,17 @@ public class TimecardService {
         if (timecard.getDate() == null) {
             errors.add("Date is Empty");
         } else {
-            if (currentDate.before((timecard.getDate()))) {
-                errors.add("Cannot add future dates!");
-            }
             if (!hasAdminRole) {
-                if (currentDate.getTime() > timecard.getDate().getTime()) {
-                    errors.add("Cannot add past dates!");
+                String currentDateConv = currentDate.toString().replaceAll("^(.*)(\\s[0-9][0-9][:].*)", "$1");
+                String timeCardConv = timecard.getDate().toString().replaceAll("^(.*)(\\s[0-9][0-9][:].*)", "$1");
+                if (!currentDateConv.equalsIgnoreCase(timeCardConv)) {
+                    errors.add("Invalid date! Cannot add past or future dates!");
+                    System.out.println("CURRENT DATE: " + currentDateConv);
+                    System.out.println("PASSED DATE: " + timeCardConv);
+                }
+            } else {
+                if (currentDate.before(timecard.getDate())) {
+                    errors.add("Invalid date! Cannot add future dates!");
                 }
             }
         }

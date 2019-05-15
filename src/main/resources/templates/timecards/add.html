@@ -27,6 +27,15 @@
             })
         });
 
+        function ConfirmSave()
+        {
+             var x = confirm("Are you sure you want to save this?");
+            if (x)
+                return true;
+            else
+                return false;
+        }
+
     </script>
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
@@ -84,6 +93,10 @@
                    th:each="error : ${#fields.errors('global')}"
                    th:text="${error}">Validation error</p>
 
+                <div th:if="${errors != null}" class="alert alert-danger text-center" role="alert">
+                    <div th:text="${errors}"/>
+                </div>
+
                 <div class="form-group">
                     <label for="date">Date</label>
                     <input th:field="*{date}" type="text" class="form-control" id="date"
@@ -92,8 +105,6 @@
                        th:each="error: ${#fields.errors('date')}"
                        th:text="${error}">Validation error</p>
                 </div>
-
-
                 <div class="form-group">
                     <label for="hours">Hours</label>
                     <input th:field="*{hours}" type="text" class="form-control" id="hours"
@@ -101,11 +112,7 @@
                     <p class="alert alert-danger text-center" role="alert"
                        th:each="error: ${#fields.errors('hours')}"
                        th:text="${error}">Validation error</p>
-                    <div th:if="${errors != null}" class="alert alert-danger text-center" role="alert">
-                        <div th:text="${errors}"/>
-                    </div>
                 </div>
-
                 <div class="form-group">
                     <label for="inputGroupSelect01">Employee</label>
                     <select class="custom-select" id="inputGroupSelect01">
@@ -153,14 +160,14 @@
 
                 <input name="id" type="hidden" th:value="${timecard.id}"/>
 
-                <input class="btn btn-success" type="submit" value="Save"/>
+                <input class="btn btn-success" Onclick="return ConfirmSave();" type="submit" value="Save"/>
 
                 <a href="/timecards">
                     <input class="btn btn-danger" type="button" value="Cancel"/>
                 </a>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 </div>
 </body>
 </html>

@@ -22,9 +22,6 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-//    @Autowired
-//    private EmployeeService employeeService;
-
     public JdbcTemplateTimecardDAO(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -60,7 +57,7 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
         String sql = "";
         Long newId = null;
 
-        if (model.getId() > 0) {
+        if ((model.getId() > 0) && (getHours(model) <= 8)) {
             sql = "update time_card set user_comment=?, employee_id=?, project_id=?, hours=?, working_date=? "
                     + "where time_id = ? returning time_id";
             newId = jdbcTemplate.queryForObject(sql, new Object[]{

@@ -23,8 +23,6 @@ public class CommonModelInterceptor implements HandlerInterceptor {
     @ModelAttribute
     public void getCommonModel(ModelAndView model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = false;
-        boolean isUser = false;
 
         if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = authentication.getName();
@@ -32,21 +30,10 @@ public class CommonModelInterceptor implements HandlerInterceptor {
 
             List<String> roles = new LinkedList();
 
-            for (String role : roles) {
-                if (role.equalsIgnoreCase("admin")) {
-                    isAdmin = true;
-                } else {
-                    isUser = true;
-                }
-            }
-            for (GrantedAuthority auth:
-            authentication.getAuthorities()) {
+            for (GrantedAuthority auth : authentication.getAuthorities()) {
                 roles.add(auth.getAuthority());
             }
-
             model.addObject("roles", roles);
-            model.addObject("isAdmin", isAdmin);
-            model.addObject("isUser", isUser);
         }
     }
 

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
-public class Timecard extends AbstractModel {
+public class Timecard extends AbstractModel implements Comparable<Timecard> {
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @NotNull(message = "Cannot be empty!")
@@ -92,5 +92,10 @@ public class Timecard extends AbstractModel {
                 ", employee_id=" + employee_id +
                 ", project_id=" + project_id +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Timecard o) {
+        return this.getDate().compareTo(o.getDate());
     }
 }

@@ -14,9 +14,15 @@
     });
     });
 
-
+    function ConfirmDelete()
+    {
+      var x = confirm("Are you sure you want to delete?");
+      if (x)
+          return true;
+      else
+        return false;
+    }
     </script>
-    <!-- Required meta tags -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
@@ -39,7 +45,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/employee">Employees</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/employee">Employees</a>
                 <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/project">Projects</a>
                 <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/cost">Costs</a>
                 <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/timecards">Time cards</a>
@@ -67,11 +73,7 @@
     <input sec:authorize="hasAuthority('ADMIN')" class="form-control" id="myInput" type="text" placeholder="Search.."/>
 
     <table class="table table-bordered table-striped">
-        <thead sec:authorize="hasAuthority('USER')">
-        <td class="alert alert-danger text-center" role="alert">
-            Only ADMINs can see the content of this page!</td>
-        </thead>
-        <thead sec:authorize="hasAuthority('ADMIN')">
+        <thead sec:authorize="isAuthenticated()">
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
@@ -79,11 +81,11 @@
             <!--<th>Birth Date</th>-->
             <th>Employment Date</th>
             <th>Job Title</th>
-            <th>Action</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Action</th>
         </tr>
         </thead>
 
-        <tbody sec:authorize="hasAuthority('ADMIN')" id="myTable">
+        <tbody sec:authorize="isAuthenticated()" id="myTable">
         <tr th:each="tempEmployee: ${employees}">
             <td th:text="${tempEmployee.firstName}"></td>
             <td th:text="${tempEmployee.lastName}"></td>
@@ -91,12 +93,12 @@
             <!--<td th:text="${#dates.format(tempEmployee.birthDate, 'dd-MMM-yyyy')}"></td>-->
             <td th:text="${#dates.format(tempEmployee.employmentDate, 'dd-MMM-yyyy')}"></td>
             <td th:text="${tempEmployee.jobTitle}"></td>
-            <td>
+            <td sec:authorize="hasAuthority('ADMIN')">
                 <span>
                 <a th:href="@{/employee/edit/{id} (id=${tempEmployee.id})}" class="btn btn-info bt-sm mb-3">
                     Edit
                 </a>
-                <a th:href="@{/employee/delete/{id} (id=${tempEmployee.id})}" class="btn btn-danger bt-sm mb-3">
+                <a th:href="@{/employee/delete/{id} (id=${tempEmployee.id})}" Onclick="return ConfirmDelete();" class="btn btn-danger bt-sm mb-3">
                     Delete
                 </a>
                     <a th:href="@{/employee/calculateDailyEmployeeCost{id} (id=${tempEmployee.id})}"
