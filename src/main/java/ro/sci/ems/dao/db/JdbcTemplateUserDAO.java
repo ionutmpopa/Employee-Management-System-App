@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Date;
 
 @Repository
 public class JdbcTemplateUserDAO implements UserDAO {
@@ -41,6 +42,11 @@ public class JdbcTemplateUserDAO implements UserDAO {
     public Collection<User> getAll() {
         return jdbcTemplate.query("select * from app_user",
                 new UserMapper());
+    }
+
+    @Override
+    public Collection<User> getAllByDate(Date date) {
+        return null;
     }
 
     @Override

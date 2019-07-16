@@ -8,10 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ro.sci.ems.dao.EmployeeDAO;
-import ro.sci.ems.domain.Employee;
-import ro.sci.ems.domain.Gender;
-import ro.sci.ems.domain.Role;
-import ro.sci.ems.domain.User;
+import ro.sci.ems.domain.*;
 import ro.sci.ems.service.UserService;
 
 import javax.sql.DataSource;
@@ -56,6 +53,11 @@ public class JdbcTemplateEmployeeDAO implements EmployeeDAO {
 
         return jdbcTemplate.query("select * from employee where email = ?",
                 new EmployeeMapper(), currentUserName);
+    }
+
+    @Override
+    public Collection<Employee> getAllByDate(Date date) {
+        return null;
     }
 
     @Override

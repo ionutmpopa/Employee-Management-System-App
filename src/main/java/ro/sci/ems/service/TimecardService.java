@@ -39,6 +39,10 @@ public class TimecardService {
         return timecardDAO.getAll();
     }
 
+    public Collection<Timecard> listAllByDate(Date date) {
+        return timecardDAO.getAllByDate(date);
+    }
+
     public boolean delete(Long id) {
         LOGGER.debug("Deleting timecard with id: " + id);
         Timecard timecard = timecardDAO.findById(id);

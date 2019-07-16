@@ -10,6 +10,8 @@ public class User extends AbstractModel {
     @NotEmpty(message = "Password cannot be empty!")
 	private String password;
 
+    private String confirmPassword;
+
     @NotEmpty(message = "First name cannot be empty!")
 	private String firstName;
 
@@ -55,7 +57,15 @@ public class User extends AbstractModel {
 		return enabled;
 	}
 
-	public boolean setEnabled(boolean value) {
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public boolean setEnabled(boolean value) {
 		this.enabled = value;
 		return true;
 	}

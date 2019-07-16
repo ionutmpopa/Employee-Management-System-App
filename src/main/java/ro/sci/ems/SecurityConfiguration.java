@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class    SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;

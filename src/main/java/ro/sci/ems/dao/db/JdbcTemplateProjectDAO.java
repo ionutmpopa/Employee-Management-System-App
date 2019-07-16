@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 
 @Repository
 public class JdbcTemplateProjectDAO implements ProjectDAO {
@@ -33,6 +34,11 @@ public class JdbcTemplateProjectDAO implements ProjectDAO {
         return jdbcTemplate.queryForObject("select * from project where project_id = ?",
 
                 new ProjectMapper(), id);
+    }
+
+    @Override
+    public Collection<Project> getAllByDate(Date date) {
+        return null;
     }
 
     @Override

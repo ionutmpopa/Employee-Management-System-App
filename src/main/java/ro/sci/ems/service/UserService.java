@@ -65,7 +65,7 @@ public class UserService {
 
     public void save(User user) throws ValidationException {
         LOGGER.debug("Saving: " + user);
-        //validate(user);
+        validate(user);
         userDAO.update(user);
     }
 
@@ -78,6 +78,11 @@ public class UserService {
 
         if (StringUtils.isEmpty(user.getLastName())) {
             errors.add("Last Name is Empty");
+        }
+
+        if (!user.getPassword().equalsIgnoreCase(user.getConfirmPassword()) ||
+                user.getPassword() != user.getConfirmPassword()) {
+            errors.add("Password and Confirm password do not match!");
         }
 
         if (StringUtils.isEmpty(user.getPassword())) {

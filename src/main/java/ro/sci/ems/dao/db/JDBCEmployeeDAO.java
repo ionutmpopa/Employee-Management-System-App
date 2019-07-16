@@ -54,6 +54,11 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 	}
 
 	@Override
+	public Collection<Employee> getAllByDate(Date date) {
+		return null;
+	}
+
+	@Override
 	public Employee findById(Long id) {
 		Connection connection = newConnection();
 

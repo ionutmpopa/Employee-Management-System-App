@@ -46,6 +46,24 @@ public class JdbcTemplateTimecardDAO implements TimecardDAO {
     }
 
     @Override
+    public Collection<Timecard> getAllByDate(Date date) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+
+        boolean hasAdminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ADMIN"));
+
+        if (hasAdminRole) {
+            return jdbcTemplate.query("select * from time_card where working_date = ?",
+                    new TimecardMapper(), date);
+        }
+
+        return jdbcTemplate.query("select * from time_card tc INNER JOIN employee emp ON (tc.employee_id = emp.employee_id) WHERE emp.email = ? AND tc.working_date = ?",
+                new TimecardMapper(), currentUserName, date);
+    }
+
+    @Override
     public Timecard findById(Long id) {
         return jdbcTemplate.queryForObject("select * from time_card where time_id = ?",
                 new TimecardMapper(), id);

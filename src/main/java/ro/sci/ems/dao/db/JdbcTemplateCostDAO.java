@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 
 @Repository
 public class JdbcTemplateCostDAO implements CostDAO {
@@ -34,6 +35,11 @@ public class JdbcTemplateCostDAO implements CostDAO {
         return jdbcTemplate.queryForObject("select * from cost where cost_id = ?",
 
                 new CostMapper(), id);
+    }
+
+    @Override
+    public Collection<Cost> getAllByDate(Date date) {
+        return null;
     }
 
     @Override

@@ -66,6 +66,30 @@ public class TimecardController {
         return result;
     }
 
+    @RequestMapping(value = "/listAllByDate{date}", method = RequestMethod.GET)
+    public ModelAndView listAllByDate(@PathVariable("date") Date date) {
+        ModelAndView result = new ModelAndView("timecards/list");
+
+        Collection<Timecard> timecards = timecardService.listAllByDate(date);
+        Collections.sort((List)timecards, Collections.reverseOrder());
+        result.addObject("timecards", timecards);
+
+        Map<String, String> employeeNames = new HashMap<>();
+        for (Timecard timecard : timecards) {
+            Employee employee = employeeService.get(timecard.getEmployee_id());
+            employeeNames.put(timecard.getEmployee_id() + "", employee.getFirstName() + " " + employee.getLastName());
+        }
+        result.addObject("employeeNames", employeeNames);
+
+        Map<String, String> projectNames = new HashMap<>();
+        for (Timecard timecard : timecards) {
+            Project project = projectService.findById(timecard.getProject_id());
+            projectNames.put(timecard.getProject_id() + "", project.getName());
+        }
+        result.addObject("projectNames", projectNames);
+        return result;
+    }
+
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public ModelAndView add() {

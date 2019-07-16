@@ -59,6 +59,10 @@
                            th:each="error : ${#fields.errors('global')}"
                            th:text="${error}" >Validation error</p>
 
+                        <div th:if="${errors != null}" class="alert alert-danger text-center" role="alert">
+                            <div th:text="${errors}"/>
+                        </div>
+
                         <div class="form-group"
                              th:classappend="${#fields.hasErrors('firstName')}? 'has-error':''">
                             <label for="firstName" class="control-label">First name</label>
@@ -103,6 +107,18 @@
                             <p class="alert alert-danger text-center" role="alert"
                                th:each="error : ${#fields.errors('password')}"
                                th:text="${error}">Validation error</p>
+                        </div>
+                        <div class="form-group"
+                             th:classappend="${#fields.hasErrors('confirmPassword')}? 'has-error':''">
+                            <label for="confirmPassword" class="control-label">Confirm password</label>
+                            <input id="confirmPassword"
+                                   class="form-control"
+                                   type="password"
+                                   th:field="*{confirmPassword}"
+                                   placeHolder="Confirm password"/>
+                        </div>
+                        <div th:if="${password != confirmPassword}" class="alert alert-danger text-center" role="alert">
+                            <div th:text="Password and Confirm password do not match!"/>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">Sign Up</button>

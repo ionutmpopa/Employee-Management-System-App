@@ -4,6 +4,7 @@ import ro.sci.ems.dao.BaseDAO;
 import ro.sci.ems.domain.AbstractModel;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,6 +18,11 @@ public class IMBaseDAO<T extends AbstractModel> implements BaseDAO<T> {
 	public Collection<T> getAll() {
 
 		return models.values();
+	}
+
+	@Override
+	public Collection<T> getAllByDate(Date date) {
+		return null;
 	}
 
 	@Override

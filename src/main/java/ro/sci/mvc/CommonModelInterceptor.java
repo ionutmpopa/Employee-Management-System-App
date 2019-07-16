@@ -50,8 +50,7 @@ public class CommonModelInterceptor implements HandlerInterceptor {
 
         boolean isRedirectView = modelAndView.getView() instanceof RedirectView;
         boolean isViewObject = modelAndView.getView() != null;
-        boolean viewNameStartsWithRedirect = (modelAndView.getViewName() == null ? true
-                : modelAndView.getViewName().startsWith(UrlBasedViewResolver.REDIRECT_URL_PREFIX));
+        boolean viewNameStartsWithRedirect = (modelAndView.getViewName() == null || modelAndView.getViewName().startsWith(UrlBasedViewResolver.REDIRECT_URL_PREFIX));
 
         if (modelAndView.hasView()
                 && ((isViewObject && !isRedirectView) || (!isViewObject && !viewNameStartsWithRedirect))) {
