@@ -68,7 +68,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link active" href="/">Home</a>
-                <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/employee">Employees</a>
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/employee">Employees</a>
                 <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/project">Projects</a>
                 <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link active" href="/cost">Costs</a>
                 <a sec:authorize="isAuthenticated()" class="nav-item nav-link active" href="/timecards">Time cards</a>

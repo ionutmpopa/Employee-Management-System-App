@@ -16,6 +16,7 @@ import ro.sci.ems.exception.ValidationException;
 import ro.sci.ems.service.CostService;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class CostController {
 
     @RequestMapping("/save")
     public ModelAndView save(@Valid Cost cost,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult) throws SQLException {
 
         ModelAndView modelAndView = new ModelAndView();
         if (!bindingResult.hasErrors()) {

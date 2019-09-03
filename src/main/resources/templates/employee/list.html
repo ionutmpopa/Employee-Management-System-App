@@ -56,9 +56,6 @@
     </div>
 </nav>
 
-<!--<body th:style="'background: url(/images/workpl.png) no-repeat center center fixed;'">-->
-<!--</body>-->
-
 <div class="container mt-5">
     <h3>
         Employee Directory
@@ -101,11 +98,11 @@
                 <a th:href="@{/employee/delete/{id} (id=${tempEmployee.id})}" Onclick="return ConfirmDelete();" class="btn btn-danger bt-sm mb-3">
                     Delete
                 </a>
-                    <a th:href="@{/employee/calculateDailyEmployeeCost{id} (id=${tempEmployee.id})}"
+                    <a th:href="@{/employee/calculateEmployeeCost/{id}/{showDaily} (id=${tempEmployee.id}, showDaily=${true})}"
                        class="btn btn-success bt-sm mb-3">
                     Daily Cost
                 </a>
-                <a th:href="@{/employee/calculateEmployeeCost{id} (id=${tempEmployee.id})}"
+                <a th:href="@{/employee/calculateEmployeeCost/{id}/{showDaily} (id=${tempEmployee.id}, showDaily=${false})}"
                    class="btn btn-info bt-sm mb-3">
                     Total Cost
                 </a>

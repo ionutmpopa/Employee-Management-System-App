@@ -8,19 +8,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ro.sci.ems.dao.EmployeeDAO;
-import ro.sci.ems.domain.*;
+import ro.sci.ems.domain.Employee;
+import ro.sci.ems.domain.Gender;
+import ro.sci.ems.domain.Role;
+import ro.sci.ems.domain.User;
 import ro.sci.ems.service.UserService;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Collection;
 import java.util.Date;
 
 @Repository("dao")
 public class JdbcTemplateEmployeeDAO implements EmployeeDAO {
 
+    @Autowired
     private DataSource dataSource;
 
     @Autowired
@@ -35,7 +37,6 @@ public class JdbcTemplateEmployeeDAO implements EmployeeDAO {
     public JdbcTemplateEmployeeDAO(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
-
 
     @Override
     public Collection<Employee> getAll() {
@@ -57,105 +58,126 @@ public class JdbcTemplateEmployeeDAO implements EmployeeDAO {
 
     @Override
     public Collection<Employee> getAllByDate(Date date) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Employee findById(Long id) {
-        return jdbcTemplate.queryForObject("select * from employee where employee_id = ?",
-
+        return jdbcTemplate.queryForObject("select * from employee where id = ?",
                 new EmployeeMapper(), id);
     }
 
     @Override
-    public Employee update(Employee model) {
+    public Employee update(Employee model) throws SQLException {
 
-        User user = new User();
-        Role role = new Role();
+        Role newRole = new Role();
+        User newUser = new User();
 
-        String sql = "";
-        String sql2 = "";
-        Long newId = null;
-        Long newUserId = null;
-        String sql3 = "";
-        Long newRoleId = null;
+        String sql;
+        String sql2;
+        String sql3;
+        Long newId;
+        Employee employee = new Employee();
 
         if (model.getId() > 0) {
-            sql = "update employee set first_name=?, last_name=?, job_title=?, email=?, date_of_birth=?, employment_date=?, gender = ? "
-                    + "where employee_id = ? returning employee_id";
-            newId = jdbcTemplate.queryForObject(sql, new Object[]{
-                    model.getFirstName(),
+            sql = "update employee set first_name=?, last_name=?, job_title=?, email=?, birth_date=?, employment_date=?, gender = ? "
+                    + "where id = ?";
+            jdbcTemplate.update(sql, model.getFirstName(),
                     model.getLastName(),
-                    model.getJobTitle().toString(),
+                    model.getJobTitle(),
                     model.getEmail(),
-                    new Timestamp(model.getBirthDate().getTime()),
-                    new Timestamp(model.getEmploymentDate().getTime()),
+                    new java.sql.Date(model.getBirthDate().getTime()),
+                    new java.sql.Date(model.getEmploymentDate().getTime()),
                     model.getGender().name(),
-                    model.getId()
-
-            }, new RowMapper<Long>() {
-                public Long mapRow(ResultSet rs, int arg1) throws SQLException {
-                    return rs.getLong(1);
-                }
-            });
+                    model.getId());
         } else {
-            sql = "insert into employee (first_name, last_name, job_title, email, date_of_birth, employment_date, gender) "
-                    + "values (?, ?, ?, ?, ?, ?, ?) returning employee_id";
 
-            newId = jdbcTemplate.queryForObject(sql, new Object[]{
-                    model.getFirstName(),
-                    model.getLastName(),
-                    model.getJobTitle().toString(),
-                    model.getEmail(),
-                    new Timestamp(model.getBirthDate().getTime()),
-                    new Timestamp(model.getEmploymentDate().getTime()),
-                    model.getGender().name()
+            Connection connection = null;
+            try {
+                connection = dataSource.getConnection();
+                connection.setAutoCommit(false);
 
-            }, new RowMapper<Long>() {
-                public Long mapRow(ResultSet rs, int arg1) throws SQLException {
-                    return rs.getLong(1);
-                }
-            });
-        model.setId(newId);
+                newId = getSequenceId(connection, "select sq_user_id.nextval from dual");
 
-        sql2 = "insert into app_user (first_name, last_name, email, password, active) "
-                + "values (?, ?, ?, ?, ?) returning id";
+                model.setId(newId);
 
-        newUserId = jdbcTemplate.queryForObject(sql2, new Object[]{
-                model.getFirstName(),
-                model.getLastName(),
-                model.getEmail(),
-                bCryptPasswordEncoder.encode("12345"),
-                true
-        }, new RowMapper<Long>() {
-            public Long mapRow(ResultSet rs, int arg1) throws SQLException {
-                return rs.getLong(1);
+                sql = "insert into app_user (id,email,first_name,last_name,password,active) " +
+                        "values (?,?,?,?,?,?)";
+
+                jdbcTemplate.update(sql, model.getId(),
+                        model.getEmail(),
+                        model.getLastName(),
+                        model.getFirstName(),
+                        bCryptPasswordEncoder.encode("12345"),
+                        "Y");
+
+                sql2 = "insert INTO user_role (user_id,role_id) "
+                        + "values (?,?)";
+
+                jdbcTemplate.update(sql2, model.getId(),
+                        2);
+
+                sql3 = "insert INTO employee (id, first_name, last_name, job_title, email, birth_date, employment_date, gender) "
+                        + "values (?, ?, ?, ?, ?, ?, ?, ?)";
+
+                jdbcTemplate.update(sql3,
+                        model.getId(),
+                        model.getFirstName(),
+                        model.getLastName(),
+                        model.getJobTitle(),
+                        model.getEmail(),
+                        new java.sql.Date(model.getBirthDate().getTime()),
+                        new java.sql.Date(model.getEmploymentDate().getTime()),
+                        model.getGender().name());
+
+                connection.commit();
+
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+            } finally {
+                connection.setAutoCommit(true);
+                connection.close();
             }
-        });
-
-        user.setId(newUserId);
-
-            sql3 = "insert into user_role (user_id,role_id) "
-                    + "values (?,?) returning id";
-
-            newRoleId = jdbcTemplate.queryForObject(sql3, new Object[]{
-                    user.getId(),
-                    2
-            }, new RowMapper<Long>() {
-                public Long mapRow(ResultSet rs, int arg1) throws SQLException {
-                    return rs.getLong(1);
-                }
-            });
-
-            role.setId(newRoleId);
-    }
-
+        }
         return model;
     }
 
     @Override
     public boolean delete(Employee model) {
-        return jdbcTemplate.update("delete from employee where employee_id = ?", model.getId()) > 0;
+
+
+        String sql = "BEGIN\n" +
+                "delete from employee where id = ?;\n" +
+                "delete from user_role where user_id = ?;\n" +
+                "delete from app_user where id = ?;\n" +
+                "END;";
+
+        Connection connection = null;
+
+        try {
+
+            connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+            boolean myUpdate = jdbcTemplate.update(sql,
+                    model.getId(),
+                    model.getId(),
+                    model.getId()) > 0;
+
+            connection.commit();
+            return myUpdate;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+                return false;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
     }
 
     @Override
@@ -166,17 +188,36 @@ public class JdbcTemplateEmployeeDAO implements EmployeeDAO {
                 new EmployeeMapper());
     }
 
+    private Long getSequenceId(Connection connection, String query) throws SQLException {
+
+        PreparedStatement myUserStatement = null;
+        try {
+            myUserStatement = connection.prepareStatement(query);
+            ResultSet res = myUserStatement.executeQuery();
+            while (res.next()) {
+                return res.getLong(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (myUserStatement != null) {
+                myUserStatement.close();
+            }
+        }
+        return null;
+    }
+
     private static class EmployeeMapper implements RowMapper<Employee> {
 
         @Override
         public Employee mapRow(ResultSet rs, int arg1) throws SQLException {
             Employee employee = new Employee();
-            employee.setId(rs.getLong("employee_id"));
+            employee.setId(rs.getLong("id"));
             employee.setFirstName(rs.getString("first_name"));
             employee.setLastName(rs.getString("last_name"));
             employee.setJobTitle(rs.getString("job_title"));
             employee.setEmail(rs.getString("email"));
-            employee.setBirthDate(new Date(rs.getTimestamp("date_of_birth").getTime()));
+            employee.setBirthDate(new Date(rs.getTimestamp("birth_date").getTime()));
             employee.setEmploymentDate(new Date(rs.getTimestamp("employment_date").getTime()));
             employee.setGender(Gender.valueOf(rs.getString("gender")));
             return employee;

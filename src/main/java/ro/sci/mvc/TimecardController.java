@@ -21,6 +21,7 @@ import ro.sci.ems.service.TimecardService;
 import ro.sci.ems.service.UserService;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.*;
 
 @Controller
@@ -135,7 +136,7 @@ public class TimecardController {
 
     @RequestMapping("/save")
     public ModelAndView save(@Valid Timecard timecard,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult) throws SQLException {
 
         ModelAndView modelAndView = new ModelAndView();
         if (!bindingResult.hasErrors()) {

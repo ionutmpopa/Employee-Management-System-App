@@ -14,6 +14,7 @@ import ro.sci.ems.exception.ValidationException;
 import ro.sci.ems.service.UserService;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class UserController {
 
     @RequestMapping("/save")
     public ModelAndView save(@Valid User user,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult) throws SQLException {
 
         ModelAndView modelAndView = new ModelAndView();
         User existing = userService.findByEmail(user.getEmail());

@@ -9,6 +9,7 @@ import ro.sci.ems.dao.CostDAO;
 import ro.sci.ems.domain.Cost;
 import ro.sci.ems.exception.ValidationException;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -47,7 +48,7 @@ public class CostService {
 
     }
 
-    public void save(Cost cost) throws ValidationException {
+    public void save(Cost cost) throws ValidationException, SQLException {
         LOGGER.debug("Saving: " + cost);
         validate(cost);
 

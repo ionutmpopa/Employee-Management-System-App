@@ -1,30 +1,26 @@
 package ro.sci.ems.domain;
 
-import java.util.List;
-import java.util.Map;
-
 public class EmployeeCost implements Comparable<EmployeeCost> {
 
-    private Map<String, Double> projectNames;
-    private List<String> projectName;
     private String name;
+    private String employeeName;
     private double cost;
+    private double hoursPerProject;
 
-    public Map<String, Double> getProjectNames() {
-        return projectNames;
+    public double getHoursPerProject() {
+        return hoursPerProject;
     }
 
-    public void setProjectNames(Map<String, Double> projectNames) {
-        this.projectNames = projectNames;
+    public void setHoursPerProject(double hoursPerProject) {
+        this.hoursPerProject = hoursPerProject;
     }
 
-
-    public List<String> getProjectName() {
-        return projectName;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setProjectName(List<String> projectName) {
-        this.projectName = projectName;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
 
     public String getName() {
@@ -45,6 +41,16 @@ public class EmployeeCost implements Comparable<EmployeeCost> {
 
     @Override
     public int compareTo(EmployeeCost o) {
-            return this.getName().compareTo(o.getName());
+        return this.getName().compareTo(o.getName());
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeCost{" +
+                "name='" + name + '\'' +
+                ", employeeName='" + employeeName + '\'' +
+                ", cost=" + cost +
+                ", hoursPerProject=" + hoursPerProject +
+                '}';
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -24,22 +25,36 @@ public class ApplicationConfiguration {
 	private String dbName;
 
 	@Bean
-	public DataSource dataSource() {
+	public DataSource dataSource() throws SQLException {
+
+	    // connect to PostgreSQL
+//		String url = new StringBuilder()
+//				.append("jdbc:")
+//				.append("postgresql")
+//				.append("://")
+//				.append(dbHost)
+//				.append(":")
+//				.append("5432")
+//				.append("/")
+//				.append(dbName)
+//				.append("?user=")
+//				.append(dbUser)
+//				.append("&password=")
+//				.append(dbPassword).toString();
+
+
+        // connect to Oracle SQL
 		String url = new StringBuilder()
 				.append("jdbc:")
-				.append("postgresql")
-				.append("://")
+				.append("oracle:thin")
+				.append(":@//")
 				.append(dbHost)
 				.append(":")
-				.append("5432")
+				.append("1521")
 				.append("/")
-				.append(dbName)
-				.append("?user=")
-				.append(dbUser)
-				.append("&password=")
-				.append(dbPassword).toString();
+				.append("xe").toString();
 
-		return new SingleConnectionDataSource(url, false);
+		return new SingleConnectionDataSource(url, dbName, dbPassword, true);
 	}
 
 	@Bean

@@ -43,7 +43,9 @@
 </thead>
 
 <div sec:authorize="hasAuthority('ADMIN')" class="container mt-5">
-    <h3>Employee Daily Cost Details</h3>
+    <h3>Employee Daily Cost History</h3>
+
+
     <hr/>
 
     <tbody>
@@ -55,11 +57,7 @@
     <td>
         <div th:each="employee : ${employeeCost}">
 
-            <a th:text="${#dates.format(employee.workingDate, 'dd-MMM-yyyy') + '-> ' + employee.name + ': ' + employee.cost + ' Euro; ' + employee.hoursPerProject + ' hours per project'}">
-            </a>
-            <a th:href="@{/employee/dailydetails/{id}/{showHistory} (id=${employee.id}, showHistory=${true})}"
-               class="btn btn-info bt-sm mb-3">
-                Print cost history
+            <a th:text="${#dates.format(employee.workingDate, 'dd-MMM-yyyy') + '-> ' + employee.name + ': ' + employee.jobTitle + ': ' + employee.cost + ' Euro; ' + employee.hoursPerProject + ' hours per project'}">
             </a>
         </div>
     </td>

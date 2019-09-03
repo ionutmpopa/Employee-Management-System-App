@@ -10,6 +10,7 @@ import ro.sci.ems.dao.TimecardDAO;
 import ro.sci.ems.domain.Timecard;
 import ro.sci.ems.exception.ValidationException;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -58,7 +59,7 @@ public class TimecardService {
         return timecardDAO.findById(id);
     }
 
-    public void save(Timecard timecard) throws ValidationException {
+    public void save(Timecard timecard) throws ValidationException, SQLException {
         LOGGER.debug("Saving: " + timecard);
         validate(timecard);
         timecardDAO.update(timecard);

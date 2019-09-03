@@ -7,12 +7,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ro.sci.ems.dao.EmployeeDAO;
-import ro.sci.ems.domain.Cost;
-import ro.sci.ems.domain.Employee;
-import ro.sci.ems.domain.Project;
-import ro.sci.ems.domain.Timecard;
+import ro.sci.ems.domain.*;
 import ro.sci.ems.exception.ValidationException;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -66,7 +64,7 @@ public class EmployeeService {
         return dao.findById(id);
     }
 
-    public void save(Employee employee) throws ValidationException {
+    public void save(Employee employee) throws ValidationException, SQLException {
         LOGGER.debug("Saving: " + employee);
         validate(employee);
 
@@ -158,43 +156,54 @@ public class EmployeeService {
         return sum;
     }
 
-    public Map<String, Double> getProjectCostsPerEmployee(long employeeId) {
+    public Collection<EmployeeCost> getProjectCostsPerEmployee(long employeeId) {
 
         Collection<Timecard> timecards = timecardService.listAll();
         Collection<Project> projects = projectService.listAll();
         Collection<Cost> costs = costService.listAll();
+        List<EmployeeCost> orderList = null;
 
-        Map<String, Double> myProjects = new TreeMap<>();
+        Collection<EmployeeCost> myProjects = new LinkedList<>();
         for (Project project : projects) {
             double sum = 0;
+            double result = 0;
             for (Timecard timecard : timecards) {
                 Employee employee = employeeService.get(timecard.getEmployee_id());
                 double hours = timecard.getHours();
                 if (timecard.getEmployee_id() == employeeId) {
                     if (project.getId() == timecard.getProject_id()) {
                         for (Cost cost : costs) {
-                            if (employee.getJobTitle().toString() == cost.getTitle().toString()) {
+                            if (employee.getJobTitle() == cost.getTitle().toString()) {
                                 sum += hours;
-                                double result = cost.getCost() * sum;
-                                myProjects.put(project.getName(), result);
+                                result = cost.getCost() * sum;
                             }
                         }
                     }
                 }
             }
+            if (result != 0.0) {
+                EmployeeCost employeeCost = new EmployeeCost();
+                employeeCost.setName(project.getName());
+                employeeCost.setCost(result);
+                employeeCost.setHoursPerProject(sum);
+
+                myProjects.add(employeeCost);
+                orderList = new LinkedList<>(myProjects);
+                Collections.sort(orderList);
+            }
         }
-        return myProjects;
+        return orderList;
     }
 
-    public List<String> getDailyProjectCostsPerEmployee(long employeeId) {
+    public Collection<EmployeeDailyCost> getDailyProjectCostsPerEmployee(long employeeId) {
 
         Collection<Timecard> timecards = timecardService.listAll();
         Collection<Project> projects = projectService.listAll();
         Collection<Cost> costs = costService.listAll();
+        List<EmployeeDailyCost> reverseList = null;
+        SimpleDateFormat date_format = new SimpleDateFormat("dd-MM-yyyy");
 
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
-
-        List<String> myProjects = new ArrayList<>();
+        Collection<EmployeeDailyCost> myProjects = new LinkedList<>();
         for (Timecard timecard : timecards) {
             double hours = timecard.getHours();
             Employee employee = employeeService.get(timecard.getEmployee_id());
@@ -203,19 +212,29 @@ public class EmployeeService {
                 for (Project project : projects) {
                     if (project.getId() == timecard.getProject_id()) {
                         for (Cost cost : costs) {
-                            if (employee.getJobTitle().toString() == cost.getTitle().toString()) {
+                            if (employee.getJobTitle() == cost.getTitle().toString()) {
+                                EmployeeDailyCost employeeDailyCost = new EmployeeDailyCost();
                                 sum += hours;
                                 double result = cost.getCost() * sum;
-                                myProjects.add("(" + DATE_FORMAT.format(new Date(timecard.getDate().getTime())) + ") "
-                                              + project.getName() + ": " + result + " Euro");
+                                employeeDailyCost.setId(employeeId);
+                                employeeDailyCost.setName(project.getName());
+                                employeeDailyCost.setCost(result);
+                                employeeDailyCost.setHoursPerProject(hours);
+                                employeeDailyCost.setJobTitle(employee.getJobTitle());
+                                employeeDailyCost.setWorkingDate(new Date(timecard.getDate().getTime()));
+                                myProjects.add(employeeDailyCost);
+                                reverseList = new LinkedList<>(myProjects);
+                                Collections.sort(reverseList, Collections.reverseOrder());
                             }
                         }
                     }
                 }
             }
         }
-        return myProjects;
+        return reverseList;
     }
+
+
 
     public EmployeeDAO getDao() {
         return dao;

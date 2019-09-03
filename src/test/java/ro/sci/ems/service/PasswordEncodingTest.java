@@ -10,6 +10,6 @@ public class PasswordEncodingTest {
         String password = "whynot";
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String hashedPassword = encoder.encode(password);
-        //System.out.println(hashedPassword);
+        System.out.println(hashedPassword);
     }
 }

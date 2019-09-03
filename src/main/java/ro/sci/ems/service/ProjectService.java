@@ -11,6 +11,7 @@ import ro.sci.ems.domain.Project;
 import ro.sci.ems.domain.Timecard;
 import ro.sci.ems.exception.ValidationException;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
@@ -61,7 +62,7 @@ public class ProjectService {
     }
 
 
-    public void save(Project project) throws ValidationException {
+    public void save(Project project) throws ValidationException, SQLException {
         LOGGER.debug("Saving: " + project);
 
         projectDAO.update(project);

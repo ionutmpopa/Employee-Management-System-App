@@ -18,6 +18,7 @@ import ro.sci.ems.exception.ValidationException;
 import ro.sci.ems.service.ProjectService;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -80,7 +81,7 @@ public class ProjectController {
 
     @RequestMapping("/save")
     public ModelAndView save(@Valid Project project,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult) throws SQLException {
 
         ModelAndView modelAndView = new ModelAndView();
         if (!bindingResult.hasErrors()) {

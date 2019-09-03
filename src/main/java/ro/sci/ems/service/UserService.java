@@ -10,6 +10,7 @@ import ro.sci.ems.dao.UserDAO;
 import ro.sci.ems.domain.User;
 import ro.sci.ems.exception.ValidationException;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ public class UserService {
         return null;
     }
 
-    public void save(User user) throws ValidationException {
+    public void save(User user) throws ValidationException, SQLException {
         LOGGER.debug("Saving: " + user);
         validate(user);
         userDAO.update(user);

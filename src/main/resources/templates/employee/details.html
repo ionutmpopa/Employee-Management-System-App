@@ -46,22 +46,19 @@
 
     <tbody>
 
-    <h5 th:text="${employeeCost.name}"></h5>
+    <h5 th:text="${employeeDet.employeeName}"></h5>
 
     <p></p>
 
     <td>
-        <!--<div th:each="project : ${myProjectList}">-->
-            <!--<div th:text="${project}"></div>-->
-        <!--</div>-->
-        <div th:each="project : ${myProjectList}">
-            <div th:text="${project.key} + ': ' + ${myProjectList[project.key]}"></div>
+        <div th:each="employee : ${employeeCost}">
+            <div th:text="${employee.name + ': ' + employee.cost + ' Euro; ' + employee.hoursPerProject + ' hours per project'}"></div>
         </div>
 
 
     </td>
     <hr/>
-    <b>TOTAL:</b> <td th:text="${employeeCost.cost}"></td> Euro
+    <b>TOTAL:</b> <td th:text="${employeeDet.cost}"></td> Euro
     </tbody>
 </div>
 </body>
